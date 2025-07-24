@@ -14,7 +14,7 @@ import Navigation from '../navigation/Navigation'
 
 function MainForm() {
 	const [posts, setPosts] = useState<Todo[]>([])
-	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const [isLoading] = useState<boolean>(false)
 	const [category, setIsCategory] = useState<status>('all')
 	const [myInput, setMyInput] = useState<TodoRequest['title']>('')
 	const [isHideCategory, setIsHideCategory] = useState<Record<status, boolean>>(
@@ -108,7 +108,7 @@ function MainForm() {
 
 		const childId = child.getAttribute('data-id') as status
 		setPosts([])
-		setIsCategory((prev) => (prev = childId))
+		setIsCategory(childId)
 		setIsHideCategory({
 			all: true,
 			completed: true,

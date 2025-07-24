@@ -1,12 +1,12 @@
-@import '../styles/global.scss';
-@import '../styles/variables';
+@use '../styles/global.scss' as *;
+@use '../styles/variables';
 
 .myBtn {
 	@include button-base;
 	transition: all;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	font-family: $fnt-family;
+	font-family: variables.$fnt-family;
 }
 
 .myBtn:active {

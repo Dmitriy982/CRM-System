@@ -1,5 +1,5 @@
-@import '../../styles/global.scss';
-@import '../../styles/variables';
+@use '../../styles/global.scss' as *;
+@use '../../styles/variables';
 
 .myHeader {
 	display: flex;
@@ -10,7 +10,7 @@
 .myButton {
 	@include button-base;
 	transition: all;
-	font-family: $fnt-family;
+	font-family: variables.$fnt-family;
 }
 
 .myButton:active {
@@ -18,6 +18,6 @@
 }
 
 .myInput {
-	font-family: $fnt-family;
-	padding: $paddingElem;
+	font-family: variables.$fnt-family;
+	padding: variables.$paddingElem;
 }

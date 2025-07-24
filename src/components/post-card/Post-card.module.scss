@@ -1,4 +1,4 @@
-@import '../../styles/variables';
+@use '../../styles/variables';
 
 .myCard {
 	display: flex;
@@ -7,19 +7,11 @@
 	width: 100%;
 }
 
-.myCheckbox {
-	display: inline-block;
-	border-radius: 50%;
-	width: 20px;
-	height: 20px;
-	background-color: rgba(18, 107, 201, 1);
-}
-
 .buttonsContainer {
 	max-width: 200px;
 }
 
 .myInput {
-	font-family: $fnt-family;
-	padding: $paddingElem;
+	font-family: variables.$fnt-family;
+	padding: variables.$paddingElem;
 }

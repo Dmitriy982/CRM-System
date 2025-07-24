@@ -32,7 +32,7 @@ function PostCard({
 
 	const handleCancelButton = () => {
 		setEditInputValue((val) => (val ? false : true))
-		setInputState((val) => (val = title))
+		setInputState(title)
 	}
 
 	return (
