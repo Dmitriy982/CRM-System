@@ -1,0 +1,23 @@
+@import '../../styles/global.scss';
+@import '../../styles/variables';
+
+.myHeader {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.myButton {
+	@include button-base;
+	transition: all;
+	font-family: $fnt-family;
+}
+
+.myButton:active {
+	transform: scale(0.95);
+}
+
+.myInput {
+	font-family: $fnt-family;
+	padding: $paddingElem;
+}

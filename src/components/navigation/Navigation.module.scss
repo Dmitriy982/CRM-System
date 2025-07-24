@@ -1,0 +1,20 @@
+.myNavigation {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+}
+
+.myCategory {
+	text-decoration: underline;
+	background-color: transparent;
+	border: none;
+	padding: 10px 0;
+}
+
+.myCategoryNotActive {
+	padding: 5px;
+	text-decoration: none;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+}

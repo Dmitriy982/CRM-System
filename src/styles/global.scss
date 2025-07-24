@@ -1,0 +1,19 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+@mixin flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@mixin button-base {
+	padding: 5px;
+	background-color: transparent;
+	border: 1px solid black;
+	cursor: pointer;
+	transition: all;
+}

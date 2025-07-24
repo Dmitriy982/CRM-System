@@ -1,0 +1,14 @@
+@import '../styles/global.scss';
+@import '../styles/variables';
+
+.myBtn {
+	@include button-base;
+	transition: all;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-family: $fnt-family;
+}
+
+.myBtn:active {
+	transform: scale(0.95);
+}

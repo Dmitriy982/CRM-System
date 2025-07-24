@@ -1,0 +1,25 @@
+@import '../../styles/variables';
+
+.myCard {
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.myCheckbox {
+	display: inline-block;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	background-color: rgba(18, 107, 201, 1);
+}
+
+.buttonsContainer {
+	max-width: 200px;
+}
+
+.myInput {
+	font-family: $fnt-family;
+	padding: $paddingElem;
+}

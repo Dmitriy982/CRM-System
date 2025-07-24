@@ -1,0 +1,22 @@
+@import '../../styles/global.scss';
+@import '../../styles/variables';
+
+.myForm {
+	min-width: 450px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.add {
+	border: 1px solid black;
+	padding: $paddingElem;
+}
+
+.myButton {
+	@include button-base;
+	transition: all;
+}
+
+.myButton:active {
+	transform: scale(0.95);
+}

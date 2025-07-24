@@ -1,0 +1,6 @@
+@import '../../styles/global.scss';
+
+.app {
+	@include flex-center;
+	min-height: 100vh;
+}
