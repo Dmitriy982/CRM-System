@@ -11,6 +11,7 @@ import type { Todo, TodoRequest } from '../../API/types'
 import PostCard from '../post-card/Post-card'
 import Header from '../header/Header'
 import Navigation from '../navigation/Navigation'
+import validation from '../../Validation/validation'
 
 function MainForm() {
 	const [posts, setPosts] = useState<Todo[]>([])
@@ -35,24 +36,14 @@ function MainForm() {
 		setAmount(data.info)
 	}
 	const handleSubmit = () => {
-		if (!myInput) {
-			alert('Это поле не может быть пустым')
-			return
-		}
-		if (myInput.length == 1) {
-			alert('Минимальная длина текста 2 символа')
-			return
-		}
-		if (myInput.length > 64) {
-			alert('Максимальная длина текста 64 символа')
-			return
-		}
+		if (validation(myInput)) return
+		const trimedInput = myInput?.trim()
 		addTodo({
-			title: myInput,
+			title: trimedInput,
 			isDone: false,
 		}).then((post) => {
 			if (post) {
-				setPosts((posts) => [post, ...posts])
+				setPosts((posts) => [ ...posts, post])
 				getTodos(fetchTodos(category))
 			}
 		})
@@ -72,13 +63,10 @@ function MainForm() {
 		isDone: Todo['isDone']
 	) => {
 		if (title) {
-			editTodos(
-				{
-					isDone: isDone,
-					title: title,
-				},
-				id
-			).then(() => {
+			editTodos({
+				isDone: isDone,
+				title: title,
+				}, id ).then(() => {
 				setPosts((posts) =>
 					posts.map((post) =>
 						post.id === id ? { ...post, title, isDone } : post

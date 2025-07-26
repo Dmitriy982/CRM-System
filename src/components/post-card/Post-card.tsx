@@ -2,6 +2,7 @@ import { useState, type ReactElement } from 'react'
 import type { Todo } from '../../API/types'
 import MyButton from '../../UI/MyButton'
 import styles from './Post-card.module.scss'
+import validation from '../../Validation/validation'
 
 interface IPostCard extends Omit<Todo, 'created'> {
 	onDelete: () => void
@@ -24,10 +25,21 @@ function PostCard({
 		setIsChecked((state) => (state ? false : true))
 		onIsDone(!isChecked, id, title)
 	}
+
 	const handleEditButton = () => {
 		setEditInputValue((val) => (val ? false : true))
-		if (inputState === title) return
-		onEdit(id, inputState, isDone)
+	}
+
+	const handleSaveButton = () => {
+		setEditInputValue((val) => (val ? false : true))
+		if (validation(inputState)){ 
+			setInputState(title)
+			return
+		}
+		const trimedInput = inputState.trim()
+		setInputState(trimedInput)
+		if (trimedInput === title) return
+		onEdit(id, trimedInput, isDone)
 	}
 
 	const handleCancelButton = () => {
@@ -65,7 +77,7 @@ function PostCard({
 							height='100%'
 							width='60px'
 							color='green'
-							onClick={handleEditButton}
+							onClick={handleSaveButton}
 						>
 							Сохранить
 						</MyButton>
