@@ -11,7 +11,10 @@
 }
 
 @mixin button-base {
-	padding: 5px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0.5rem;
 	background-color: transparent;
 	border: 1px solid black;
 	cursor: pointer;

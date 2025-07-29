@@ -1,10 +1,10 @@
-import MainForm from '../main-form/Main-form'
 import styles from './app.module.scss'
+import TodoList from './components/todo-list/Todo-List'
 
 function App() {
 	return (
 		<div className={styles.app}>
-			<MainForm></MainForm>
+			<TodoList></TodoList>
 		</div>
 	)
 }

@@ -1,41 +1,41 @@
-import type { MetaResponse, Todo, TodoInfo, TodoRequest } from './types'
+import type { CategorySelecor, MetaResponse, Todo, TodoInfo, TodoRequest } from '../types/types'
 
 const baseUrl = 'https://easydev.club/api/v1'
 
-export type status = 'all' | 'completed' | 'inWork'
-
-export const addTodo = async (data: TodoRequest): Promise<Todo | undefined> => {
+export const addTodo = async (title: string): Promise<Todo | undefined> => {
 	try {
 		const response = await fetch(`${baseUrl}/todos`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json;charset=utf-8',
 			},
-			body: JSON.stringify(data),
+			body: JSON.stringify({
+				title,
+				isDone: false
+			}),
 		})
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`)
 		}
-		const post: Todo = await response.json()
-
-		return post
+		const todo: Todo = await response.json()
+		return todo
 	} catch (er) {
-		console.log(er)
+		throw new Error(`HTTP error! Status: ${er}`)
 	}
 }
 
 export const fetchTodos = async (
-	param: status
+	category: CategorySelecor
 ): Promise<MetaResponse<Todo, TodoInfo> | undefined> => {
 	try {
-		const response = await fetch(`${baseUrl}/todos?filter=${param}`)
+		const response = await fetch(`${baseUrl}/todos?filter=${category}`)
 		if (!response.ok) {
 			throw new Error(`HTTP error! Status: ${response.status}`)
 		}
 		const result = await response.json()
 		return result
 	} catch (er) {
-		console.log(er)
+		throw new Error(`HTTP error! Status: ${er}`)
 	}
 }
 
@@ -48,7 +48,7 @@ export const deleteTodos = async (id: Todo['id']): Promise<undefined> => {
 			throw new Error(`HTTP error! Status: ${response.status}`)
 		}
 	} catch (er) {
-		console.log(er)
+		throw new Error(`HTTP error! Status: ${er}`)
 	}
 }
 
@@ -70,6 +70,6 @@ export const editTodos = async (
 		const result = await response.json()
 		return result
 	} catch (er) {
-		console.log(er)
+		throw new Error(`HTTP error! Status: ${er}`)
 	}
 }

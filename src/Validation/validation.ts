@@ -1,22 +1,18 @@
 
 
-function validation(myInput: string | undefined) {
-        if (!myInput) {
-            alert('Это поле не может быть пустым!')
-            return 1
+function titleValidation(title: string): string | undefined {
+        if (!title) {
+            return 'Это поле не может быть пустым!'
         }
-        if (myInput.length == 1) {
-            alert('Минимальная длина текста 2 символа!')
-            return 1
+        if (title.length < 2) {
+            return 'Минимальная длина текста 2 символа!'
         }
-        if (myInput.length > 64) {
-            alert('Максимальная длина текста 64 символа!')
-            return 1
+        if (title.length > 64) {
+            return 'Максимальная длина текста 64 символа!'
         }
-        if (!myInput.trim()) {
-            alert('Задача не должна быть пустая!')
-            return 1
+        if (!title.trim()) {
+            return 'Задача не должна быть пустая!'
         }
 }
 
-export default validation
+export default titleValidation

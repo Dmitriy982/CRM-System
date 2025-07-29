@@ -1,23 +1,18 @@
 import { type ReactElement, type ReactNode } from 'react'
 import styles from './MyButton.module.scss'
 
-interface myButton {
+interface MyButton {
 	children: ReactNode
-	color: string
-	width: string
-	height: string
-	onClick: () => void
+	variant: 'primary' | 'secondary'
+	information: 'warning' | 'success'
+	size: 'small' | 'medium' | 'large'
+	onClick: () => void 
 }
 
-function MyButton({ children, ...props }: myButton): ReactElement {
+function MyButton({ children, ...props }: MyButton): ReactElement {
 	return (
 		<button
-			className={styles.myBtn}
-			style={{
-				color: `${props.color}`,
-				width: `${props.width}`,
-				height: `${props.height}`,
-			}}
+			className={`${styles.myBtn} ${styles[`myBtn_${props.size}`]} ${styles[`myBtn_${props.variant}`]} ${styles[`myBtn_${props.information}`]}`}
 			onClick={props.onClick}
 		>
 			{children}

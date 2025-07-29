@@ -1,14 +1,44 @@
 @use '../styles/global.scss' as *;
 @use '../styles/variables';
 
-.myBtn {
+@mixin button {
 	@include button-base;
 	transition: all;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	// overflow: hidden;
+	// text-overflow: ellipsis;
 	font-family: variables.$fnt-family;
+
+	&:active {
+	transform: scale(0.95);
+}
 }
 
-.myBtn:active {
-	transform: scale(0.95);
+.myBtn {
+	@include button;
+
+&_primary {
+	background-color: variables.$primary-color;
+}
+
+&_secondary {
+	background-color: variables.$secondary-color;
+}
+
+&_warning{
+	color: variables.$warning-color;
+}
+
+&_success {
+	color: variables.$success-color;
+}
+&_small {
+	font-size: variables.$small-height;
+}
+&_medium {
+	font-size: variables.$medium-height;
+}
+&_large {
+	font-size: variables.$large-height;
+}
+
 }
