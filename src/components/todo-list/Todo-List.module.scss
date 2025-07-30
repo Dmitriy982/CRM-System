@@ -1,22 +1,27 @@
-@use '../../styles/global.scss' as *;
 @use '../../styles/variables';
 
 .myForm {
-	min-width: 450px;
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+  min-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .add {
-	border: 1px solid black;
-	padding: variables.$paddingElem;
+  border: 1px solid black;
+  padding: variables.$paddingElem;
 }
 
 .myButton {
-	@include button-base;
-	transition: all;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: transparent;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: all;
 }
 
 .myButton:active {
-	transform: scale(0.95);
+  transform: scale(0.95);
 }

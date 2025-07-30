@@ -1,12 +1,11 @@
-import styles from './app.module.scss'
-import TodoList from './components/todo-list/Todo-List'
+import TodoListPage from './pages/todo-list-page/Todo-List-Page'
 
 function App() {
-	return (
-		<div className={styles.app}>
-			<TodoList></TodoList>
-		</div>
-	)
+  return (
+    <div>
+      <TodoListPage></TodoListPage>
+    </div>
+  )
 }
 
 export default App

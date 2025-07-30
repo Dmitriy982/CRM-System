@@ -1,44 +1,47 @@
-@use '../styles/global.scss' as *;
 @use '../styles/variables';
 
 @mixin button {
-	@include button-base;
-	transition: all;
-	// overflow: hidden;
-	// text-overflow: ellipsis;
-	font-family: variables.$fnt-family;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: transparent;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: all;
+  font-family: variables.$fnt-family;
 
-	&:active {
-	transform: scale(0.95);
-}
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
 .myBtn {
-	@include button;
+  @include button;
 
-&_primary {
-	background-color: variables.$primary-color;
-}
+  &_primary {
+    background-color: variables.$primary-color;
+  }
 
-&_secondary {
-	background-color: variables.$secondary-color;
-}
+  &_secondary {
+    background-color: variables.$secondary-color;
+  }
 
-&_warning{
-	color: variables.$warning-color;
-}
+  &_warning {
+    background-color: variables.$warning-color;
+    color: #fff;
+  }
 
-&_success {
-	color: variables.$success-color;
-}
-&_small {
-	font-size: variables.$small-height;
-}
-&_medium {
-	font-size: variables.$medium-height;
-}
-&_large {
-	font-size: variables.$large-height;
-}
-
+  &_success {
+    background-color: variables.$success-color;
+  }
+  &_small {
+    font-size: variables.$small-height;
+  }
+  &_medium {
+    font-size: variables.$medium-height;
+  }
+  &_large {
+    font-size: variables.$large-height;
+  }
 }

@@ -4,7 +4,7 @@
         singleQuote: true,
         jsxSingleQuote: true,
         printWidth: 80,
-        useTabs: true,
+        useTabs: false,
         tabWidth: 2,
         endOfLine: 'lf'
     }
