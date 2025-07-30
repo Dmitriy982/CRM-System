@@ -34,7 +34,7 @@ function TodoItem({
 
   const cardOnChange = (id: Todo['id'], title: Todo['title']) => {
     setIsChecked((state) => (state ? false : true))
-    isDoneCheck(!isChecked, id, title)
+    handleEdit(id, title, !isChecked)
   }
 
   const handleEditButton = () => {
@@ -74,14 +74,6 @@ function TodoItem({
         setCustomError(e instanceof Error ? e.message : String(e))
       }
     }
-  }
-
-  const isDoneCheck = (
-    isDone: boolean,
-    id: Todo['id'],
-    title: Todo['title']
-  ) => {
-    handleEdit(id, title, isDone)
   }
 
   const handleCancelButton = () => {
