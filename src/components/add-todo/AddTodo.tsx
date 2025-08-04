@@ -2,15 +2,14 @@ import { useState } from 'react'
 import { addTodo } from '../../API/API'
 import MyButton from '../../UI/MyButton'
 import validateTitle from '../../Validation/validate-title'
-import styles from './Add-Todo.module.scss'
-import type { CategorySelector, Todo } from '../../types/types'
+import styles from './AddTodo.module.scss'
+import type { Todo } from '../../types/types'
 
 interface AddTodoProps {
-  category: CategorySelector
-  getTodos: (category: CategorySelector) => void
+  getTodos: () => Promise<void>
 }
 
-function AddTodo({ category, getTodos }: AddTodoProps) {
+function AddTodo({ getTodos }: AddTodoProps) {
   const [customError, setCustomError] = useState<string>('')
   const [addToDoInput, setAddToDoInput] = useState<Todo['title']>('')
 
@@ -21,17 +20,16 @@ function AddTodo({ category, getTodos }: AddTodoProps) {
       alert(validation)
       return
     }
-    const trimedInput = addToDoInput.trim()
     try {
-      const todo = await addTodo(trimedInput)
+      const todo = await addTodo(addToDoInput)
       if (todo) {
-        getTodos(category)
+        await getTodos()
       }
       setCustomError('')
+      setAddToDoInput('')
     } catch (e) {
       setCustomError(e instanceof Error ? e.message : String(e))
     }
-    setAddToDoInput('')
   }
 
   return (

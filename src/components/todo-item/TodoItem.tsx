@@ -1,104 +1,108 @@
 import { useState, type ReactElement } from 'react'
-import type { CategorySelector, Todo } from '../../types/types'
+import type { Todo } from '../../types/types'
 import MyButton from '../../UI/MyButton'
-import styles from './Todo-Item.module.scss'
+import styles from './TodoItem.module.scss'
 import validateTitle from '../../Validation/validate-title'
 import { deleteTodos, editTodos } from '../../API/API'
 
 interface TodoItemProps extends Omit<Todo, 'created'> {
-  getTodos: (category: CategorySelector) => void
-  category: CategorySelector
+  getTodos: () => Promise<void>
 }
 
 function TodoItem({
   getTodos,
-  category,
   id,
   title,
   isDone,
 }: TodoItemProps): ReactElement {
-  const [isChecked, setIsChecked] = useState<boolean>(isDone)
-  const [inputEditValue, setEditInputValue] = useState<boolean>(true)
+  const [isEdit, setIsEdit] = useState<boolean>(true)
   const [inputState, setInputState] = useState<string>(title)
   const [customError, setCustomError] = useState<string>('')
 
   const handleDelete = async (id: Todo['id']) => {
     try {
       await deleteTodos(id)
-      getTodos(category)
+      await getTodos()
       setCustomError('')
     } catch (e) {
       setCustomError(e instanceof Error ? e.message : String(e))
     }
   }
 
-  const cardOnChange = (id: Todo['id'], title: Todo['title']) => {
-    setIsChecked((state) => (state ? false : true))
-    handleEdit(id, title, !isChecked)
+  const checkboxStatusChange = async (
+    id: Todo['id'],
+    isDone: Todo['isDone']
+  ) => {
+    try {
+      await editTodos(
+        {
+          isDone: !isDone,
+        },
+        id
+      )
+      await getTodos()
+      setCustomError('')
+    } catch (e) {
+      setCustomError(e instanceof Error ? e.message : String(e))
+    }
   }
 
-  const handleEditButton = () => {
-    setEditInputValue((val) => (val ? false : true))
+  const handleStartEdit = () => {
+    setIsEdit(false)
   }
 
-  const handleSaveButton = () => {
+  const handleEndEdit = () => {
+    setIsEdit(true)
+  }
+
+  const handleSubmitButton = async (id: Todo['id'], title: Todo['title']) => {
     const validation = validateTitle(inputState)
     if (validation) {
       alert(validation)
       return
     }
-    setEditInputValue((val) => (val ? false : true))
-    const trimedInput = inputState.trim()
-    if (trimedInput === title) {
+    if (inputState === title) {
       return
     }
-    handleEdit(id, trimedInput, isDone)
-  }
-  const handleEdit = async (
-    id: Todo['id'],
-    title: string | null,
-    isDone: Todo['isDone']
-  ) => {
-    if (title) {
-      try {
-        await editTodos(
-          {
-            isDone: isDone,
-            title: title,
-          },
-          id
-        )
-        getTodos(category)
-        setCustomError('')
-      } catch (e) {
-        setCustomError(e instanceof Error ? e.message : String(e))
-      }
+    try {
+      await editTodos(
+        {
+          title: inputState,
+        },
+        id
+      )
+      await getTodos()
+      setCustomError('')
+    } catch (e) {
+      setCustomError(e instanceof Error ? e.message : String(e))
+    } finally {
+      handleEndEdit()
     }
   }
 
   const handleCancelButton = () => {
-    setEditInputValue((val) => (val ? false : true))
     setInputState(title)
+    handleEndEdit()
   }
 
   return (
     <div className={styles.myCard}>
       {customError && <div>{customError}</div>}
       <input
-        checked={isChecked}
-        onChange={() => cardOnChange(id, title)}
+        checked={isDone}
+        onChange={() => checkboxStatusChange(id, isDone)}
         type='checkbox'
         name='check'
       ></input>
       <input
         className={styles.myInput}
-        disabled={inputEditValue}
+        disabled={isEdit}
         value={inputState}
         onChange={(event) => setInputState(event.target.value)}
       ></input>
       <div className={styles.buttonsContainer}>
-        {inputEditValue ? (
-          <MyButton size='medium' variant='primary' onClick={handleEditButton}>
+        {isEdit ? (
+          <MyButton size='medium' variant='primary' onClick={handleStartEdit}>
             Редакитровать
           </MyButton>
         ) : (
@@ -106,7 +110,7 @@ function TodoItem({
             <MyButton
               size='medium'
               variant='success'
-              onClick={handleSaveButton}
+              onClick={() => handleSubmitButton(id, title)}
             >
               Сохранить
             </MyButton>

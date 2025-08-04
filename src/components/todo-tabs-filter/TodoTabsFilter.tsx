@@ -1,18 +1,16 @@
 import { type Dispatch, type SetStateAction } from 'react'
-import styles from './Todo-Tabs-Filter.module.scss'
+import styles from './TodoTabsFilter.module.scss'
 import type { CategorySelector } from '../../types/types'
 
 interface TodoTabsFilterProps {
   amount: Record<CategorySelector, number>
   category: CategorySelector
   setCategory: Dispatch<SetStateAction<CategorySelector>>
-  getTodos: (category: CategorySelector) => void
 }
 
 function TodoTabsFilter({
   category,
   amount,
-  getTodos,
   setCategory,
 }: TodoTabsFilterProps) {
   // const handleProgressClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -28,7 +26,6 @@ function TodoTabsFilter({
 
   const handleChangeTab = (category: CategorySelector) => {
     setCategory(category)
-    getTodos(category)
   }
   return (
     <nav className={styles.myNavigation}>
@@ -36,33 +33,25 @@ function TodoTabsFilter({
         disabled={category === 'all'}
         data-id='all'
         onClick={() => handleChangeTab('all')}
-        className={
-          category === 'all' ? styles.myCategory : styles.myCategoryNotActive
-        }
+        className={`${styles.myCategory} ${category === 'all' && styles.myCategory_notActive}`}
       >
-        Все {amount.all}
+        Все ({amount.all})
       </button>
       <button
         disabled={category === 'inWork'}
         data-id='inWork'
         onClick={() => handleChangeTab('inWork')}
-        className={
-          category === 'inWork' ? styles.myCategory : styles.myCategoryNotActive
-        }
+        className={`${styles.myCategory} ${category === 'inWork' && styles.myCategory_notActive}`}
       >
-        В работе {amount.inWork}
+        В работе ({amount.inWork})
       </button>
       <button
         disabled={category === 'completed'}
         data-id='completed'
         onClick={() => handleChangeTab('completed')}
-        className={
-          category === 'completed'
-            ? styles.myCategory
-            : styles.myCategoryNotActive
-        }
+        className={`${styles.myCategory} ${category === 'completed' && styles.myCategory_notActive}`}
       >
-        Сделано {amount.completed}
+        Сделано ({amount.completed})
       </button>
     </nav>
   )
