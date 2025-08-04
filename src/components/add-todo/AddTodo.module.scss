@@ -1,0 +1,29 @@
+@use '../../styles/variables';
+
+.myHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.myButton {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: transparent;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: all;
+  font-family: variables.$fnt-family;
+}
+
+.myButton:active {
+  transform: scale(0.95);
+}
+
+.myInput {
+  font-family: variables.$fnt-family;
+  padding: variables.$paddingElem;
+  width: 100%;
+}

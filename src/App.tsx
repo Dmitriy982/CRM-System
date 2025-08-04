@@ -1,9 +1,7 @@
+import TodoListPage from './pages/todo-list-page/TodoListPage'
+
 function App() {
-  return (
-    <>
-      123
-    </>
-  )
+  return <TodoListPage />
 }
 
 export default App

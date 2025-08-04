@@ -1,0 +1,28 @@
+@use '../../styles/variables' as v;
+
+.myCard {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.buttonsContainer {
+  max-width: 200px;
+}
+
+.myInput {
+  font-family: v.$fnt-family;
+  padding: v.$paddingElem;
+
+  &:disabled {
+    background-color: #fff;
+    border: 1px, solid, black;
+    color: black;
+  }
+}
+
+.saveCancelContainer {
+  display: flex;
+  gap: 10px;
+}

@@ -1,0 +1,47 @@
+@use '../styles/variables';
+
+@mixin button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: transparent;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: all;
+  font-family: variables.$fnt-family;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.myBtn {
+  @include button;
+
+  &_primary {
+    background-color: variables.$primary-color;
+  }
+
+  &_secondary {
+    background-color: variables.$secondary-color;
+  }
+
+  &_warning {
+    background-color: variables.$warning-color;
+    color: #fff;
+  }
+
+  &_success {
+    background-color: variables.$success-color;
+  }
+  &_small {
+    font-size: variables.$small-height;
+  }
+  &_medium {
+    font-size: variables.$medium-height;
+  }
+  &_large {
+    font-size: variables.$large-height;
+  }
+}
