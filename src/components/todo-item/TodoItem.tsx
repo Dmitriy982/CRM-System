@@ -139,6 +139,7 @@ function TodoItem({
         )} 
       <Button
         type='primary'
+        danger
         htmlType='button'
         onClick={() => handleDelete(id)}
       >
