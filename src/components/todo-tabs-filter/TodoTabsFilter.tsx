@@ -1,9 +1,9 @@
 import { type Dispatch, type SetStateAction } from 'react'
-import styles from './TodoTabsFilter.module.scss'
-import type { CategorySelector } from '../../types/types'
+import type { CategorySelector, TodoInfo } from '../../types/types'
+import { Tabs, type TabsProps } from 'antd'
 
 interface TodoTabsFilterProps {
-  amount: Record<CategorySelector, number>
+  amount: TodoInfo
   category: CategorySelector
   setCategory: Dispatch<SetStateAction<CategorySelector>>
 }
@@ -13,47 +13,33 @@ function TodoTabsFilter({
   amount,
   setCategory,
 }: TodoTabsFilterProps) {
-  // const handleProgressClick = (e: React.MouseEvent<HTMLElement>) => {
-  // 		const childElement = e.target as HTMLElement
-  // 		const child = childElement.closest<HTMLElement>('[data-id]')
-  // 		if (!child) {
-  // 			return}
-  // 		//const childId = child.getAttribute('data-id') as CategorySelector
-  // 		const childId = child.dataset.id as CategorySelector
-  // 		setCategory(childId)
-  // 		getTodos(childId)
-  // 	}
-
-  const handleChangeTab = (category: CategorySelector) => {
-    setCategory(category)
+  const handleChangeTab = (category: string) => {
+    setCategory(category as CategorySelector)
   }
+
+  const items: TabsProps['items'] = [
+    {
+      key: 'all',
+      label: `Все (${amount.all})`,
+    },
+    {
+      key: 'inWork',
+      label: `В работе (${amount.inWork})`,
+    },
+    {
+      key: 'completed',
+      label: `Сделано (${amount.completed})`,
+    },
+  ]
+
   return (
-    <nav className={styles.myNavigation}>
-      <button
-        disabled={category === 'all'}
-        data-id='all'
-        onClick={() => handleChangeTab('all')}
-        className={`${styles.myCategory} ${category === 'all' && styles.myCategory_notActive}`}
-      >
-        Все ({amount.all})
-      </button>
-      <button
-        disabled={category === 'inWork'}
-        data-id='inWork'
-        onClick={() => handleChangeTab('inWork')}
-        className={`${styles.myCategory} ${category === 'inWork' && styles.myCategory_notActive}`}
-      >
-        В работе ({amount.inWork})
-      </button>
-      <button
-        disabled={category === 'completed'}
-        data-id='completed'
-        onClick={() => handleChangeTab('completed')}
-        className={`${styles.myCategory} ${category === 'completed' && styles.myCategory_notActive}`}
-      >
-        Сделано ({amount.completed})
-      </button>
-    </nav>
+    <Tabs
+      defaultActiveKey='all'
+      activeKey={category}
+      items={items}
+      onChange={handleChangeTab}
+      centered
+    ></Tabs>
   )
 }
 

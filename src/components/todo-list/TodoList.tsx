@@ -1,6 +1,6 @@
+import { Flex } from 'antd'
 import type { Todo } from '../../types/types'
 import TodoItem from '../todo-item/TodoItem'
-import styles from './TodoList.module.scss'
 
 interface TodoLostProps {
   todos: Todo[]
@@ -9,7 +9,7 @@ interface TodoLostProps {
 
 function TodoList({ getTodos, todos }: TodoLostProps) {
   return (
-    <div className={styles.todosList}>
+    <Flex vertical>
       {todos ? (
         todos.map((todo) => (
           <TodoItem
@@ -23,7 +23,7 @@ function TodoList({ getTodos, todos }: TodoLostProps) {
       ) : (
         <h2>Нет постов</h2>
       )}
-    </div>
+    </Flex>
   )
 }
 

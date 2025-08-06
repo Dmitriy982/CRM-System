@@ -5,6 +5,9 @@ import type { CategorySelector, Todo, TodoInfo } from '../../types/types'
 import TodoTabsFilter from '../../components/todo-tabs-filter/TodoTabsFilter'
 import AddTodo from '../../components/add-todo/AddTodo'
 import TodoList from '../../components/todo-list/TodoList'
+import  { Skeleton } from 'antd'
+
+
 
 function TodoListPage() {
   const [todos, setTodos] = useState<Todo[]>([])
@@ -14,6 +17,7 @@ function TodoListPage() {
     completed: 0,
     inWork: 0,
   })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const getTodos = async () => {
     const data = await fetchTodos(category)
@@ -24,9 +28,17 @@ function TodoListPage() {
       setAmount(data.info)
     }
   }
-
-  useEffect(() => {
-    getTodos()
+  
+   useEffect(() => {
+    setIsLoading(true)
+    setTimeout(()=> {
+      setIsLoading(false)
+      getTodos()
+    }, 1000)
+    const timer = setInterval(()=>{
+      getTodos()
+    }, 5000)
+    return () => clearInterval(timer)
   }, [category])
 
   return (
@@ -37,7 +49,10 @@ function TodoListPage() {
         amount={amount}
         setCategory={setCategory}
       />
-      <TodoList getTodos={getTodos} todos={todos} />
+      
+      {isLoading 
+      ?<Skeleton paragraph={{ rows: 4 }} /> 
+      :<TodoList getTodos={getTodos} todos={todos}/>}
     </div>
   )
 }

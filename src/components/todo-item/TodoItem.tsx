@@ -1,13 +1,16 @@
 import { useState, type ReactElement } from 'react'
 import type { Todo } from '../../types/types'
-import MyButton from '../../UI/MyButton'
-import styles from './TodoItem.module.scss'
-import validateTitle from '../../Validation/validate-title'
 import { deleteTodos, editTodos } from '../../API/API'
+import { Button, Checkbox, Flex, Form, Input, type FormProps } from 'antd'
+
 
 interface TodoItemProps extends Omit<Todo, 'created'> {
   getTodos: () => Promise<void>
 }
+
+type FieldType = {
+  todo: string;
+};
 
 function TodoItem({
   getTodos,
@@ -18,6 +21,7 @@ function TodoItem({
   const [isEdit, setIsEdit] = useState<boolean>(true)
   const [inputState, setInputState] = useState<string>(title)
   const [customError, setCustomError] = useState<string>('')
+  const [form] = Form.useForm();
 
   const handleDelete = async (id: Todo['id']) => {
     try {
@@ -55,19 +59,15 @@ function TodoItem({
     setIsEdit(true)
   }
 
-  const handleSubmitButton = async (id: Todo['id'], title: Todo['title']) => {
-    const validation = validateTitle(inputState)
-    if (validation) {
-      alert(validation)
-      return
-    }
-    if (inputState === title) {
+  const handleSubmitButton: FormProps<FieldType>['onFinish'] = async (values) => {
+    if (values.todo === title) {
+      handleEndEdit()
       return
     }
       try {
         await editTodos(
           {
-            title: inputState,
+            title: values.todo,
           },
           id
         )
@@ -86,52 +86,67 @@ function TodoItem({
   }
 
   return (
-    <div className={styles.myCard}>
-      {customError && <div>{customError}</div>}
-      <input
+    <Flex justify='space-between' align='center' style={{marginBottom:'20px'}}>
+      {customError && <Flex>{customError}</Flex>}
+      <Checkbox
         checked={isDone}
         onChange={() => checkboxStatusChange(id, isDone)}
-        type='checkbox'
-        name='check'
-      ></input>
-      <input
-        className={styles.myInput}
+      ></Checkbox>
+      <Form
+       form={form}
+       initialValues={{todo: inputState}}
+       onFinish={handleSubmitButton}
+       autoComplete='off'
+       style={{alignItems:'center'}}>
+        <Flex gap='middle' align='center'>
+        <Form.Item<FieldType>
+              name="todo"
+              rules={[{ required: true,  message: 'Please input your todo!' }, {
+                min: 2, message: 'Please min 2 symbols!', 
+              }, {max: 64, message: 'Please max 64 symbols!'}
+              ]}  
+              style={{marginBottom:0}} 
+              >
+        <Input
         disabled={isEdit}
         value={inputState}
-        onChange={(event) => setInputState(event.target.value)}
-      ></input>
-      <div className={styles.buttonsContainer}>
+        style={{ width: '100%' }}
+      ></Input>
+              </Form.Item>
         {isEdit ? (
-          <MyButton size='medium' variant='primary' onClick={handleStartEdit}>
+          <Button  
+            type='primary'
+            htmlType='button'
+            onClick={handleStartEdit}>
             Редакитровать
-          </MyButton>
+          </Button>
         ) : (
-          <div className={styles.saveCancelContainer}>
-            <MyButton
-              size='medium'
-              variant='success'
-              onClick={() => handleSubmitButton(id, title)}
+          <Flex gap='small'>
+            <Button
+              type='primary'
+              htmlType='submit'
             >
               Сохранить
-            </MyButton>
-            <MyButton
-              size='medium'
-              variant='secondary'
+            </Button>
+            <Button
+              type='default'
+              htmlType='button'
               onClick={handleCancelButton}
             >
               Отмена
-            </MyButton>
-          </div>
-        )}
-      </div>
-      <MyButton
-        size='medium'
-        variant='warning'
+            </Button>
+          </Flex>
+        )} 
+      <Button
+        type='primary'
+        htmlType='button'
         onClick={() => handleDelete(id)}
       >
         Удалить
-      </MyButton>
-    </div>
+      </Button>
+      </Flex>
+      </Form>
+    </Flex>
   )
 }
 
