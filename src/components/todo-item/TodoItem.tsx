@@ -26,25 +26,25 @@ function TodoItem({
       setCustomError('')
     } catch (e) {
       setCustomError(e instanceof Error ? e.message : String(e))
-    }
+    } 
   }
 
   const checkboxStatusChange = async (
     id: Todo['id'],
     isDone: Todo['isDone']
   ) => {
-    try {
-      await editTodos(
-        {
-          isDone: !isDone,
-        },
-        id
-      )
-      await getTodos()
-      setCustomError('')
-    } catch (e) {
-      setCustomError(e instanceof Error ? e.message : String(e))
-    }
+      try {
+        await editTodos(
+          {
+            isDone: !isDone,
+          },
+          id
+        )
+        await getTodos()
+        setCustomError('')
+      } catch (e) {
+        setCustomError(e instanceof Error ? e.message : String(e))
+      }
   }
 
   const handleStartEdit = () => {
@@ -64,20 +64,20 @@ function TodoItem({
     if (inputState === title) {
       return
     }
-    try {
-      await editTodos(
-        {
-          title: inputState,
-        },
-        id
-      )
-      await getTodos()
-      setCustomError('')
-    } catch (e) {
-      setCustomError(e instanceof Error ? e.message : String(e))
-    } finally {
-      handleEndEdit()
-    }
+      try {
+        await editTodos(
+          {
+            title: inputState,
+          },
+          id
+        )
+        await getTodos()
+        setCustomError('')
+      } catch (e) {
+        setCustomError(e instanceof Error ? e.message : String(e))
+      } finally {
+        handleEndEdit()
+      }
   }
 
   const handleCancelButton = () => {
