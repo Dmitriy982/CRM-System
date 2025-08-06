@@ -6,13 +6,14 @@ import ProfilePage from './pages/profile-page/ProfilePage'
 
 function App() {
   return (
-  <Routes>
-    <Route path='/' element={<MenuNavigation />}>
-      <Route index element={<TodoListPage />}/>
-      <Route path='profile' element={<ProfilePage />}/>
-    </Route>
-    <Route path='*' element={<ErrorPage />}/>
-  </Routes>)
+    <Routes>
+      <Route path='/' element={<MenuNavigation />}>
+        <Route index element={<TodoListPage />} />
+        <Route path='profile' element={<ProfilePage />} />
+      </Route>
+      <Route path='*' element={<ErrorPage />} />
+    </Routes>
+  )
 }
 
 export default App

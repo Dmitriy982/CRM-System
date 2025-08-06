@@ -9,7 +9,6 @@ import type {
 
 const baseUrl = 'https://easydev.club/api/v1'
 
-
 export const addTodo = async (title: string): Promise<Todo | undefined> => {
   const response = await axios.post(`${baseUrl}/todos`, {
     title,
@@ -18,14 +17,15 @@ export const addTodo = async (title: string): Promise<Todo | undefined> => {
   return response.data
 }
 
-export const fetchTodos = async (category: CategorySelector): Promise<MetaResponse<Todo, TodoInfo> | undefined> => {
+export const fetchTodos = async (
+  category: CategorySelector
+): Promise<MetaResponse<Todo, TodoInfo> | undefined> => {
   const response = await axios.get(`${baseUrl}/todos?filter=${category}`)
   return response.data
 }
 
-
 export const deleteTodos = async (id: Todo['id']): Promise<undefined> => {
- const response = await axios.delete(`${baseUrl}/todos/${id}`)
+  const response = await axios.delete(`${baseUrl}/todos/${id}`)
   return response.data
 }
 

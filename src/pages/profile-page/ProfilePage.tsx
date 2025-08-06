@@ -3,7 +3,7 @@ import { Flex } from 'antd'
 function ProfilePage() {
   return (
     <>
-    <Flex style={{fontSize:'4rem'}}>Привет</Flex>
+      <Flex style={{ fontSize: '4rem' }}>Привет</Flex>
     </>
   )
 }
