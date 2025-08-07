@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import styles from './TodoListPage.module.scss'
-import { fetchTodos } from '../../API/API'
+//import { fetchTodos } from '../../API/API'
 import type { CategorySelector, Todo, TodoInfo } from '../../types/types'
 import TodoTabsFilter from '../../components/todo-tabs-filter/TodoTabsFilter'
 import AddTodo from '../../components/add-todo/AddTodo'
 import TodoList from '../../components/todo-list/TodoList'
 import { Skeleton } from 'antd'
+import PostService from '../../API/API'
 
 function TodoListPage() {
   const [todos, setTodos] = useState<Todo[]>([])
@@ -18,7 +19,7 @@ function TodoListPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const getTodos = async () => {
-    const data = await fetchTodos(category)
+    const data = await PostService.fetchTodos(category)
     if (data) {
       setTodos(data.data)
     }

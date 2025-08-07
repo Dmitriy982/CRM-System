@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { addTodo } from '../../API/API'
+//import { addTodo } from '../../API/API'
 import { Button, Flex, Form, Input, type FormProps } from 'antd'
+import PostService from '../../API/API'
 
 interface AddTodoProps {
   getTodos: () => Promise<void>
@@ -16,7 +17,7 @@ function AddTodo({ getTodos }: AddTodoProps) {
 
   const handleSubmit: FormProps<FieldType>['onFinish'] = async (value) => {
     try {
-      const todo = await addTodo(value.addTodo)
+      const todo = await PostService.addTodo(value.addTodo)
       if (todo) {
         await getTodos()
       }

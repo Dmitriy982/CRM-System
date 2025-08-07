@@ -1,7 +1,8 @@
-import { useState, type ReactElement } from 'react'
+import { memo, useState, type ReactElement } from 'react'
 import type { Todo } from '../../types/types'
-import { deleteTodos, editTodos } from '../../API/API'
+//import { deleteTodos, editTodos } from '../../API/API'
 import { Button, Checkbox, Flex, Form, Input, type FormProps } from 'antd'
+import PostService from '../../API/API'
 
 interface TodoItemProps extends Omit<Todo, 'created'> {
   getTodos: () => Promise<void>
@@ -11,20 +12,18 @@ type FieldType = {
   todo: string
 }
 
-function TodoItem({
+const TodoItem = memo(function TodoItem({
   getTodos,
   id,
   title,
   isDone,
 }: TodoItemProps): ReactElement {
   const [isEdit, setIsEdit] = useState<boolean>(true)
-  const [inputState, setInputState] = useState<string>(title)
   const [customError, setCustomError] = useState<string>('')
   const [form] = Form.useForm()
-
   const handleDelete = async (id: Todo['id']) => {
     try {
-      await deleteTodos(id)
+      await PostService.deleteTodos(id)
       await getTodos()
       setCustomError('')
     } catch (e) {
@@ -37,7 +36,7 @@ function TodoItem({
     isDone: Todo['isDone']
   ) => {
     try {
-      await editTodos(
+      await PostService.editTodos(
         {
           isDone: !isDone,
         },
@@ -66,7 +65,7 @@ function TodoItem({
       return
     }
     try {
-      await editTodos(
+      await PostService.editTodos(
         {
           title: values.todo,
         },
@@ -82,8 +81,8 @@ function TodoItem({
   }
 
   const handleCancelButton = () => {
-    setInputState(title)
     handleEndEdit()
+    form.setFieldsValue({todo: title})
   }
 
   return (
@@ -99,7 +98,7 @@ function TodoItem({
       ></Checkbox>
       <Form
         form={form}
-        initialValues={{ todo: inputState }}
+        initialValues={{ todo: title }}
         onFinish={handleSubmitButton}
         autoComplete='off'
         style={{ alignItems: 'center' }}
@@ -113,14 +112,12 @@ function TodoItem({
                 min: 2,
                 message: 'Please min 2 symbols!',
               },
-              { max: 64, message: 'Please max 64 symbols!' },
+              { max: 64, message: 'Please max 64 symbols!' }
             ]}
             style={{ marginBottom: 0 }}
           >
             <Input
               disabled={isEdit}
-              value={inputState}
-              style={{ width: '100%' }}
             ></Input>
           </Form.Item>
           {isEdit ? (
@@ -153,6 +150,8 @@ function TodoItem({
       </Form>
     </Flex>
   )
-}
+})
+
+
 
 export default TodoItem
