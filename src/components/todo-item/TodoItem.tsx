@@ -12,7 +12,7 @@ type FieldType = {
   todo: string
 }
 
-const TodoItem = memo(function TodoItem({
+function TodoItem({
   getTodos,
   id,
   title,
@@ -150,8 +150,7 @@ const TodoItem = memo(function TodoItem({
       </Form>
     </Flex>
   )
-})
-
+}
 
 
 export default TodoItem

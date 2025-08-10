@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 //import { addTodo } from '../../API/API'
 import { Button, Flex, Form, Input, type FormProps } from 'antd'
 import PostService from '../../API/API'
@@ -11,10 +11,10 @@ type FieldType = {
   addTodo: string
 }
 
-function AddTodo({ getTodos }: AddTodoProps) {
+const AddTodo = memo(function AddTodo ({ getTodos }: AddTodoProps) {
   const [customError, setCustomError] = useState<string>('')
   const [form] = Form.useForm()
-
+  
   const handleSubmit: FormProps<FieldType>['onFinish'] = async (value) => {
     try {
       const todo = await PostService.addTodo(value.addTodo)
@@ -63,6 +63,6 @@ function AddTodo({ getTodos }: AddTodoProps) {
       {customError && <Flex>{customError}</Flex>}
     </>
   )
-}
+})
 
 export default AddTodo

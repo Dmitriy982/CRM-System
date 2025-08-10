@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction } from 'react'
+import { memo, type Dispatch, type SetStateAction } from 'react'
 import type { CategorySelector, TodoInfo } from '../../types/types'
 import { Tabs, type TabsProps } from 'antd'
 
@@ -16,6 +16,7 @@ function TodoTabsFilter({
   const handleChangeTab = (category: string) => {
     setCategory(category as CategorySelector)
   }
+  
 
   const items: TabsProps['items'] = [
     {

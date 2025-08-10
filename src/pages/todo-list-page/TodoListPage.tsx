@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styles from './TodoListPage.module.scss'
 //import { fetchTodos } from '../../API/API'
 import type { CategorySelector, Todo, TodoInfo } from '../../types/types'
@@ -18,7 +18,7 @@ function TodoListPage() {
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const getTodos = async () => {
+  const getTodos = useCallback(async () => {
     const data = await PostService.fetchTodos(category)
     if (data) {
       setTodos(data.data)
@@ -26,13 +26,13 @@ function TodoListPage() {
     if (data?.info) {
       setAmount(data.info)
     }
-  }
+  }, [category])
 
   useEffect(() => {
     setIsLoading(true)
-    setTimeout(() => {
+    setTimeout(async () => {
+      await getTodos()
       setIsLoading(false)
-      getTodos()
     }, 1000)
     const timer = setInterval(() => {
       getTodos()
