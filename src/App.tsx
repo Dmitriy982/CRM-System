@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import TodoListPage from './pages/todo-list-page/TodoListPage'
 import ErrorPage from './pages/error-page/ErrorPage'
-import MenuNavigation from './pages/menu-navigation/MenuNavigation'
+import MenuNavigation from './layout/MenuNavigation'
 import ProfilePage from './pages/profile-page/ProfilePage'
 
 function App() {

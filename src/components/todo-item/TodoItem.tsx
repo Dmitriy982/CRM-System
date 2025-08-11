@@ -1,8 +1,9 @@
-import { memo, useState, type ReactElement } from 'react'
+import { useState, type ReactElement } from 'react'
 import type { Todo } from '../../types/types'
-//import { deleteTodos, editTodos } from '../../API/API'
 import { Button, Checkbox, Flex, Form, Input, type FormProps } from 'antd'
-import PostService from '../../API/API'
+import { deleteTodos, editTodos } from '../../API/API'
+import { CheckSquareOutlined, CloseOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
+
 
 interface TodoItemProps extends Omit<Todo, 'created'> {
   getTodos: () => Promise<void>
@@ -23,7 +24,7 @@ function TodoItem({
   const [form] = Form.useForm()
   const handleDelete = async (id: Todo['id']) => {
     try {
-      await PostService.deleteTodos(id)
+      await deleteTodos(id)
       await getTodos()
       setCustomError('')
     } catch (e) {
@@ -36,7 +37,7 @@ function TodoItem({
     isDone: Todo['isDone']
   ) => {
     try {
-      await PostService.editTodos(
+      await editTodos(
         {
           isDone: !isDone,
         },
@@ -65,7 +66,7 @@ function TodoItem({
       return
     }
     try {
-      await PostService.editTodos(
+      await editTodos(
         {
           title: values.todo,
         },
@@ -95,7 +96,7 @@ function TodoItem({
       <Checkbox
         checked={isDone}
         onChange={() => checkboxStatusChange(id, isDone)}
-      ></Checkbox>
+      />
       <Form
         form={form}
         initialValues={{ todo: title }}
@@ -118,24 +119,30 @@ function TodoItem({
           >
             <Input
               disabled={isEdit}
-            ></Input>
+            />
           </Form.Item>
           {isEdit ? (
-            <Button type='primary' htmlType='button' onClick={handleStartEdit}>
-              Редакитровать
-            </Button>
+            <Button 
+            type='primary' 
+            htmlType='button' 
+            onClick={handleStartEdit}
+            size='large'
+            icon={<EditOutlined />}/>
           ) : (
             <Flex gap='small'>
-              <Button type='primary' htmlType='submit'>
-                Сохранить
-              </Button>
+              <Button 
+              type='primary' 
+              htmlType='submit'
+              size='large'
+              icon={<CheckSquareOutlined />}/>
               <Button
                 type='default'
                 htmlType='button'
                 onClick={handleCancelButton}
-              >
-                Отмена
-              </Button>
+                size='large'
+                icon={<CloseOutlined />}
+                
+              />
             </Flex>
           )}
           <Button
@@ -143,9 +150,9 @@ function TodoItem({
             danger
             htmlType='button'
             onClick={() => handleDelete(id)}
-          >
-            Удалить
-          </Button>
+            size='large'
+            icon={<DeleteOutlined />}
+          />
         </Flex>
       </Form>
     </Flex>

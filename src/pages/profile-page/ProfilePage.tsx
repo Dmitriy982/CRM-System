@@ -1,10 +1,10 @@
-import { Flex } from 'antd'
+import { Typography } from 'antd'
 
 function ProfilePage() {
   return (
-    <>
-      <Flex style={{ fontSize: '4rem' }}>Привет</Flex>
-    </>
+    <Typography style={{ fontSize: '4rem', justifySelf: 'center' }}>
+      Привет
+    </Typography>
   )
 }
 

@@ -1,4 +1,4 @@
-import { memo, type Dispatch, type SetStateAction } from 'react'
+import {type Dispatch, type SetStateAction } from 'react'
 import type { CategorySelector, TodoInfo } from '../../types/types'
 import { Tabs, type TabsProps } from 'antd'
 
