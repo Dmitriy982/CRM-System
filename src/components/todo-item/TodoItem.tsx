@@ -1,12 +1,16 @@
 import { useState, type ReactElement } from 'react'
 import type { Todo } from '../../types/types'
-import MyButton from '../../UI/MyButton'
-import styles from './TodoItem.module.scss'
-import validateTitle from '../../Validation/validate-title'
+import { Button, Checkbox, Flex, Form, Input, type FormProps } from 'antd'
 import { deleteTodos, editTodos } from '../../API/API'
+import { CheckSquareOutlined, CloseOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
+
 
 interface TodoItemProps extends Omit<Todo, 'created'> {
   getTodos: () => Promise<void>
+}
+
+type FieldType = {
+  todo: string
 }
 
 function TodoItem({
@@ -16,9 +20,8 @@ function TodoItem({
   isDone,
 }: TodoItemProps): ReactElement {
   const [isEdit, setIsEdit] = useState<boolean>(true)
-  const [inputState, setInputState] = useState<string>(title)
   const [customError, setCustomError] = useState<string>('')
-
+  const [form] = Form.useForm()
   const handleDelete = async (id: Todo['id']) => {
     try {
       await deleteTodos(id)
@@ -55,19 +58,17 @@ function TodoItem({
     setIsEdit(true)
   }
 
-  const handleSubmitButton = async (id: Todo['id'], title: Todo['title']) => {
-    const validation = validateTitle(inputState)
-    if (validation) {
-      alert(validation)
-      return
-    }
-    if (inputState === title) {
+  const handleSubmitButton: FormProps<FieldType>['onFinish'] = async (
+    values
+  ) => {
+    if (values.todo === title) {
+      handleEndEdit()
       return
     }
     try {
       await editTodos(
         {
-          title: inputState,
+          title: values.todo,
         },
         id
       )
@@ -81,58 +82,82 @@ function TodoItem({
   }
 
   const handleCancelButton = () => {
-    setInputState(title)
     handleEndEdit()
+    form.setFieldsValue({todo: title})
   }
 
   return (
-    <div className={styles.myCard}>
-      {customError && <div>{customError}</div>}
-      <input
+    <Flex
+      justify='space-between'
+      align='center'
+      style={{ marginBottom: '20px' }}
+    >
+      {customError && <Flex>{customError}</Flex>}
+      <Checkbox
         checked={isDone}
         onChange={() => checkboxStatusChange(id, isDone)}
-        type='checkbox'
-        name='check'
-      ></input>
-      <input
-        className={styles.myInput}
-        disabled={isEdit}
-        value={inputState}
-        onChange={(event) => setInputState(event.target.value)}
-      ></input>
-      <div className={styles.buttonsContainer}>
-        {isEdit ? (
-          <MyButton size='medium' variant='primary' onClick={handleStartEdit}>
-            Редакитровать
-          </MyButton>
-        ) : (
-          <div className={styles.saveCancelContainer}>
-            <MyButton
-              size='medium'
-              variant='success'
-              onClick={() => handleSubmitButton(id, title)}
-            >
-              Сохранить
-            </MyButton>
-            <MyButton
-              size='medium'
-              variant='secondary'
-              onClick={handleCancelButton}
-            >
-              Отмена
-            </MyButton>
-          </div>
-        )}
-      </div>
-      <MyButton
-        size='medium'
-        variant='warning'
-        onClick={() => handleDelete(id)}
+      />
+      <Form
+        form={form}
+        initialValues={{ todo: title }}
+        onFinish={handleSubmitButton}
+        autoComplete='off'
+        style={{ alignItems: 'center' }}
       >
-        Удалить
-      </MyButton>
-    </div>
+        <Flex gap='middle' align='center'>
+          <Form.Item<FieldType>
+            name='todo'
+            rules={[
+              { required: true, message: 'Please input your todo!' },
+              {
+                min: 2,
+                message: 'Please min 2 symbols!',
+              },
+              { max: 64, message: 'Please max 64 symbols!' }
+            ]}
+            style={{ marginBottom: 0 }}
+          >
+            <Input
+              disabled={isEdit}
+            />
+          </Form.Item>
+          {isEdit ? (
+            <Button 
+            type='primary' 
+            htmlType='button' 
+            onClick={handleStartEdit}
+            size='large'
+            icon={<EditOutlined />}/>
+          ) : (
+            <Flex gap='small'>
+              <Button 
+              type='primary' 
+              htmlType='submit'
+              size='large'
+              icon={<CheckSquareOutlined />}/>
+              <Button
+                type='default'
+                htmlType='button'
+                onClick={handleCancelButton}
+                size='large'
+                icon={<CloseOutlined />}
+                
+              />
+            </Flex>
+          )}
+          <Button
+            type='primary'
+            danger
+            htmlType='button'
+            onClick={() => handleDelete(id)}
+            size='large'
+            icon={<DeleteOutlined />}
+          />
+        </Flex>
+      </Form>
+    </Flex>
   )
 }
+
 
 export default TodoItem

@@ -1,53 +1,70 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
+import { Button, Flex, Form, Input, type FormProps } from 'antd'
 import { addTodo } from '../../API/API'
-import MyButton from '../../UI/MyButton'
-import validateTitle from '../../Validation/validate-title'
-import styles from './AddTodo.module.scss'
-import type { Todo } from '../../types/types'
+import { addTodoLength } from '../../constans/todo'
+
 
 interface AddTodoProps {
   getTodos: () => Promise<void>
 }
 
-function AddTodo({ getTodos }: AddTodoProps) {
-  const [customError, setCustomError] = useState<string>('')
-  const [addToDoInput, setAddToDoInput] = useState<Todo['title']>('')
+type FieldType = {
+  addTodo: string
+}
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const validation = validateTitle(addToDoInput)
-    if (validation) {
-      alert(validation)
-      return
-    }
+const AddTodo = memo(function AddTodo ({ getTodos }: AddTodoProps) {
+  const [customError, setCustomError] = useState<string>('')
+  const [form] = Form.useForm()
+  
+  const handleSubmit: FormProps<FieldType>['onFinish'] = async (value) => {
     try {
-      const todo = await addTodo(addToDoInput)
+      const todo = await addTodo(value.addTodo)
       if (todo) {
         await getTodos()
       }
       setCustomError('')
-      setAddToDoInput('')
+      form.setFieldsValue({ addTodo: '' })
     } catch (e) {
       setCustomError(e instanceof Error ? e.message : String(e))
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.myHeader}>
-      {customError && <div>{customError}</div>}
-      <input
-        type='text'
-        id='input'
-        value={addToDoInput}
-        onChange={(event) => setAddToDoInput(event.target.value)}
-        placeholder='Task To Be Done...'
-        className={styles.myInput}
-      ></input>
-      <MyButton type='submit' size='large' variant='primary'>
-        add
-      </MyButton>
-    </form>
+    <>
+      <Form
+        form={form}
+        onFinish={handleSubmit}
+        autoComplete='off'
+        layout='inline'
+      >
+        <Form.Item<FieldType>
+          name='addTodo'
+          rules={[
+            { required: true, message: 'Please input your username!' },
+            {
+              min: addTodoLength.minLength,
+              message: `Please min ${addTodoLength.minLength}!`,
+            },
+            { max: addTodoLength.maxLength, 
+              message: `Please max ${addTodoLength.maxLength}!` },
+          ]}
+          style={{ flex: 1 }}
+        >
+          <Input
+            type='text'
+            id='input'
+            placeholder='Task To Be Done...'
+          ></Input>
+        </Form.Item>
+        <Form.Item label={null} style={{ marginInlineEnd: '0' }}>
+          <Button type='primary' htmlType='submit'>
+            add
+          </Button>
+        </Form.Item>
+      </Form>
+      {customError && <Flex>{customError}</Flex>}
+    </>
   )
-}
+})
 
 export default AddTodo
