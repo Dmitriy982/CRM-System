@@ -1,0 +1,7 @@
+@use '../../styles/variables';
+
+.todosList {
+  min-width: 450px;
+  display: flex;
+  flex-direction: column;
+}

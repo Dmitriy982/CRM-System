@@ -1,0 +1,21 @@
+@use '../../styles/variables' as v;
+
+.myNavigation {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.myCategory {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  padding: 10px 0;
+
+  &_notActive {
+    text-decoration: underline;
+    color: v.$primary-color;
+    font-weight: 600;
+    cursor: default;
+  }
+}

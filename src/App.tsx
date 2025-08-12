@@ -1,8 +1,18 @@
+import { Route, Routes } from 'react-router-dom'
+import TodoListPage from './pages/todo-list-page/TodoListPage'
+import ErrorPage from './pages/error-page/ErrorPage'
+import MenuNavigation from './layout/MenuNavigation'
+import ProfilePage from './pages/profile-page/ProfilePage'
+
 function App() {
   return (
-    <>
-      123
-    </>
+    <Routes>
+      <Route path='/' element={<MenuNavigation />}>
+        <Route index element={<TodoListPage />} />
+        <Route path='profile' element={<ProfilePage />} />
+      </Route>
+      <Route path='*' element={<ErrorPage />} />
+    </Routes>
   )
 }
 
