@@ -1,5 +1,5 @@
 import { Flex } from 'antd'
-import type { Todo } from '../../types/types'
+import type { Todo } from '../../types/todos-types/todosTypes'
 import TodoItem from '../todo-item/TodoItem'
 
 interface TodoLostProps {

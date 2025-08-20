@@ -1,5 +1,8 @@
-import {type Dispatch, type SetStateAction } from 'react'
-import type { CategorySelector, TodoInfo } from '../../types/types'
+import { type Dispatch, type SetStateAction } from 'react'
+import type {
+  CategorySelector,
+  TodoInfo,
+} from '../../types/todos-types/todosTypes'
 import { Tabs, type TabsProps } from 'antd'
 
 interface TodoTabsFilterProps {
@@ -16,7 +19,6 @@ function TodoTabsFilter({
   const handleChangeTab = (category: string) => {
     setCategory(category as CategorySelector)
   }
-  
 
   const items: TabsProps['items'] = [
     {

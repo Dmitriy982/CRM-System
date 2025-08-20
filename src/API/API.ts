@@ -5,9 +5,51 @@ import type {
   Todo,
   TodoInfo,
   TodoRequest,
-} from '../types/types'
+} from '../types/todos-types/todosTypes'
+import { resetIsAuth } from '../services/reducers/UserSlice'
+import type { Token } from '../types/auth-types/authType'
+import { store } from '../main'
 
-const instance = axios.create({ baseURL: 'https://easydev.club/api/v1' })
+export const BASE_URL = 'https://easydev.club/api/v1'
+
+const instance = axios.create({ baseURL: BASE_URL, withCredentials: true })
+
+instance.interceptors.request.use((config) => {
+  config.headers.Authorization = `${localStorage.getItem('token')}`
+  return config
+})
+
+instance.interceptors.response.use(
+  (config) => {
+    return config
+  },
+  async (error) => {
+    const originalRequest = error.config
+    if (
+      error.response.status == 401 &&
+      originalRequest &&
+      !originalRequest._isRetry
+    ) {
+      originalRequest._isRetry = true
+      try {
+        const token = localStorage.getItem('tokenRef')
+        const response = await axios.post<Token>(
+          `${BASE_URL}/auth/refresh`,
+          { refreshToken: token },
+          { withCredentials: true }
+        )
+        localStorage.setItem('token', response.data.accessToken)
+        return instance.request(originalRequest)
+      } catch (e) {
+        {
+          store.dispatch(resetIsAuth())
+          return Promise.reject(e)
+        }
+      }
+    }
+    return Promise.reject(error)
+  }
+)
 
 export const addTodo = async (title: string): Promise<Todo | undefined> => {
   const response = await instance.post('/todos', { title, isDone: false })
@@ -37,3 +79,5 @@ export const editTodos = async (
   const response = await instance.put(`/todos/${id}`, data)
   return response.data
 }
+
+export default instance
