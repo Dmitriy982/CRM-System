@@ -89,8 +89,7 @@ export const logout = createAsyncThunk<
   { rejectValue: ErrorPayload | string }
 >('user/logout', async (_, { rejectWithValue, dispatch }) => {
   try {
-    const token = localStorage.getItem('tokenRef')
-    await instance.post<Token>(`/user/logout`, { refreshToken: token })
+    await instance.post(`/user/logout`)
     dispatch(resetIsAuth())
     localStorage.removeItem('token')
     localStorage.removeItem('tokenRef')
