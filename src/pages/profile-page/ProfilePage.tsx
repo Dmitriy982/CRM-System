@@ -1,11 +1,10 @@
 import { Button, Flex, Typography } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import { getUser, logout, resetIsAuth } from '../../services/reducers/UserSlice'
+import { getUser, logout} from '../../services/reducers/UserSlice'
 import { useEffect } from 'react'
 
 function ProfilePage() {
   const dispatch = useAppDispatch()
-  const {isAuth} = useAppSelector(state => state.userReducer)
   const { Text } = Typography
   useEffect(() => {
     dispatch(getUser())
