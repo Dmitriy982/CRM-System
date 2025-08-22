@@ -17,9 +17,7 @@ function ProfilePage() {
     <Flex vertical align='center' gap='large'>
       <Text>Username: {user.username}</Text>
       <Text>Email: {user.email}</Text>
-      <Text>Id: {user.id}</Text>
       <Text>Phone number: {user.phoneNumber}</Text>
-      <Text>Role: {user.roles}</Text>
       <Button
       onClick={handleLogout}
       type='primary'

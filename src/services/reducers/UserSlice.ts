@@ -5,7 +5,7 @@ import type {
   Token,
   UserRegistration,
 } from '../../types/auth-types/authType'
-import instance, { BASE_URL } from '../../API/API'
+import instance, { BASE_URL, newAccessToken } from '../../API/API'
 import axios from 'axios'
 import type { ErrorPayload } from 'vite/types/hmrPayload.js'
 
@@ -56,7 +56,7 @@ export const authUser = createAsyncThunk<
   try {
     dispatch(resetAutError())
     const response = await instance.post('/auth/signin', data)
-    localStorage.setItem('token', response.data.accessToken)
+    newAccessToken.setToken(response.data.accessToken)
     localStorage.setItem('tokenRef', response.data.refreshToken)
   } catch (er: any) {
     return rejectWithValue(er.response?.data || 'Ошибка входа')
@@ -76,7 +76,7 @@ export const checkAuth = createAsyncThunk<
       { withCredentials: true }
     )
     dispatch(setIsAuth())
-    localStorage.setItem('token', response.data.accessToken)
+    newAccessToken.setToken(response.data.accessToken)
     localStorage.setItem('tokenRef', response.data.refreshToken)
   } catch (er: any) {
     return rejectWithValue(er.response?.data || 'Ошибка обновления')
@@ -91,7 +91,7 @@ export const logout = createAsyncThunk<
   try {
     await instance.post(`/user/logout`)
     dispatch(resetIsAuth())
-    localStorage.removeItem('token')
+    newAccessToken.clearToken()
     localStorage.removeItem('tokenRef')
   } catch (er: any) {
     return rejectWithValue(er.response?.data || 'Ошибка выхода')

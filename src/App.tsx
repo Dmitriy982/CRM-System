@@ -14,9 +14,9 @@ import { checkAuth } from './services/reducers/UserSlice'
 function App() {
   const dispatch = useAppDispatch()
   useEffect(() => {
-    if (localStorage.getItem('token')) {
+    if(localStorage.getItem('tokenRef')) {
       dispatch(checkAuth())
-    }
+    } 
   })
   return (
     <Routes>

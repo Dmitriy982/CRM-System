@@ -12,10 +12,22 @@ import { store } from '../main'
 
 export const BASE_URL = 'https://easydev.club/api/v1'
 
+const accessTokenStorage = () => {
+  let accessToken: Token['accessToken'] | null = null
+  return {
+    setToken: (token: Token['accessToken']) => accessToken = token,
+    getToken: () => accessToken,
+    clearToken: () => accessToken = null 
+  }
+}
+
+export const newAccessToken = accessTokenStorage()
+
 const instance = axios.create({ baseURL: BASE_URL, withCredentials: true })
 
+
 instance.interceptors.request.use((config) => {
-  config.headers.Authorization = `${localStorage.getItem('token')}`
+  config.headers.Authorization = newAccessToken.getToken()
   return config
 })
 
@@ -38,7 +50,7 @@ instance.interceptors.response.use(
           { refreshToken: token },
           { withCredentials: true }
         )
-        localStorage.setItem('token', response.data.accessToken)
+        newAccessToken.setToken(response.data.accessToken)
         return instance.request(originalRequest)
       } catch (e) {
         {
