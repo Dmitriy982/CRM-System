@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type {
   AuthData,
   Profile,
@@ -16,6 +16,7 @@ interface UserState {
   autError: string
   user: Profile
   userError: string
+  isAuthChecked: boolean
 }
 
 const initialState: UserState = {
@@ -33,6 +34,7 @@ const initialState: UserState = {
     roles: [],
     username: '',
   },
+  isAuthChecked: false
 }
 
 export const registerUser = createAsyncThunk<
@@ -80,6 +82,8 @@ export const checkAuth = createAsyncThunk<
     localStorage.setItem('tokenRef', response.data.refreshToken)
   } catch (er: any) {
     return rejectWithValue(er.response?.data || 'Ошибка обновления')
+  } finally {
+    dispatch(setIsAuthChecked(true))
   }
 })
 
@@ -127,6 +131,10 @@ export const userSlice = createSlice({
     resetIsAuth: (state) => {
       state.isAuth = false
     },
+    setIsAuthChecked: (state, action: PayloadAction<boolean>) => {
+      state.isAuthChecked = action.payload
+    }
+
   },
   extraReducers: (builder) => {
     builder
@@ -141,6 +149,7 @@ export const userSlice = createSlice({
       })
       .addCase(authUser.fulfilled, (state) => {
         state.isAuth = true
+        state.isAuthChecked = true
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.user = action.payload
@@ -152,5 +161,5 @@ export const userSlice = createSlice({
 })
 
 export default userSlice.reducer
-export const { resetRegError, resetAutError, setIsAuth, resetIsAuth } =
+export const { resetRegError, resetAutError, setIsAuth, resetIsAuth, setIsAuthChecked } =
   userSlice.actions

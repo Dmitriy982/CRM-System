@@ -7,7 +7,7 @@ import {
 } from '../../constans/todo'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { registerUser } from '../../services/reducers/UserSlice'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 
 interface repeatPassword {
   repeatPassword: string
@@ -17,9 +17,13 @@ type FieldType = UserRegistration & repeatPassword
 
 function Registration() {
   const dispatch = useAppDispatch()
-  const { isRegister, regError } = useAppSelector((state) => state.userReducer)
+  const { isRegister, regError , isAuth} = useAppSelector((state) => state.userReducer)
   const [form] = Form.useForm()
   const { Text } = Typography
+
+  if (isAuth) {
+    return <Navigate to='/' />
+  }
 
   const handleSubmit: FormProps<FieldType>['onFinish'] = async (value) => {
     if (value.password !== value.repeatPassword) {
@@ -78,7 +82,7 @@ function Registration() {
         ]}
         style={{ flex: 1 }}
       >
-        <Input type='text' id='input' placeholder='username'></Input>
+        <Input type='text' id='inputU' placeholder='username'></Input>
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -98,7 +102,7 @@ function Registration() {
         ]}
         style={{ flex: 1 }}
       >
-        <Input type='text' id='input' placeholder='Login'></Input>
+        <Input type='text' id='inputL' placeholder='Login'></Input>
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -119,7 +123,7 @@ function Registration() {
       >
         <Input.Password
           type='text'
-          id='input'
+          id='inputP'
           placeholder='password'
           onChange={() => form.validateFields(['repeatPassword'])}
         ></Input.Password>
@@ -143,7 +147,7 @@ function Registration() {
       >
         <Input.Password
           type='text'
-          id='input'
+          id='inputR'
           placeholder='repeatPassword'
           onChange={() => form.validateFields(['password'])}
         ></Input.Password>
@@ -158,7 +162,7 @@ function Registration() {
         ]}
         style={{ flex: 1 }}
       >
-        <Input type='text' id='input' placeholder='email'></Input>
+        <Input type='text' id='inputE' placeholder='email'></Input>
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -172,7 +176,7 @@ function Registration() {
         ]}
         style={{ flex: 1 }}
       >
-        <Input type='text' id='input' placeholder='phoneNumber'></Input>
+        <Input type='text' id='inputPh' placeholder='phoneNumber'></Input>
       </Form.Item>
       <Flex justify='center'>
         <Form.Item label={null} style={{ marginInlineEnd: '0' }}>

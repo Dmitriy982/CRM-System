@@ -1,8 +1,8 @@
 import { Button, Flex, Form, Input, Typography, type FormProps } from 'antd'
-import type { AuthData } from '../../../types/auth-types/authType'
-import { LoginLength, PasswordLength } from '../../../constans/todo'
-import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
-import { authUser } from '../../../services/reducers/UserSlice'
+import type { AuthData } from '../../types/auth-types/authType'
+import { LoginLength, PasswordLength } from '../../constans/todo'
+import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { authUser } from '../../services/reducers/UserSlice'
 import { Navigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
