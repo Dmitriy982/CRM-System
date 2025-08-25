@@ -69,7 +69,7 @@ export const checkAuth = createAsyncThunk<
   void,
   void,
   { rejectValue: ErrorPayload | string }
->('auth/checkAuth', async (_, { rejectWithValue, dispatch }) => {
+>('auth/checkAuth', async (_, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('tokenRef')
     const response = await axios.post<Token>(
@@ -77,24 +77,20 @@ export const checkAuth = createAsyncThunk<
       { refreshToken: token },
       { withCredentials: true }
     )
-    dispatch(setIsAuth())
     newAccessToken.setToken(response.data.accessToken)
     localStorage.setItem('tokenRef', response.data.refreshToken)
   } catch (er: any) {
     return rejectWithValue(er.response?.data || 'Ошибка обновления')
-  } finally {
-    dispatch(setIsAuthChecked(true))
-  }
+  } 
 })
 
 export const logout = createAsyncThunk<
   void,
   void,
   { rejectValue: ErrorPayload | string }
->('user/logout', async (_, { rejectWithValue, dispatch }) => {
+>('user/logout', async (_, { rejectWithValue }) => {
   try {
     await instance.post(`/user/logout`)
-    dispatch(resetIsAuth())
     newAccessToken.clearToken()
     localStorage.removeItem('tokenRef')
   } catch (er: any) {
@@ -156,6 +152,19 @@ export const userSlice = createSlice({
       })
       .addCase(getUser.rejected, (state, action) => {
         state.userError = action.payload as string
+      })
+      .addCase(checkAuth.pending, (state) => {
+        state.isAuthChecked = false
+      })
+      .addCase(checkAuth.fulfilled, (state) => {
+        state.isAuth = true
+        state.isAuthChecked = true
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.isAuthChecked = true
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.isAuth = false
       })
   },
 })
