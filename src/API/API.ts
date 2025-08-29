@@ -6,9 +6,9 @@ import type {
   TodoInfo,
   TodoRequest,
 } from '../types/todos-types/todosTypes'
-import { resetIsAuth } from '../services/reducers/UserSlice'
 import type { Token } from '../types/auth-types/authType'
 import { store } from '../main'
+import { resetIsAuth } from '../modules/slices/userSlice'
 
 export const BASE_URL = 'https://easydev.club/api/v1'
 

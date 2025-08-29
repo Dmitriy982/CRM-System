@@ -9,13 +9,24 @@ import Autotenification from './pages/authorization/Autotenification'
 import ProtectedRoute from './routes/ProtectedRoute'
 import { useAppDispatch } from './hooks/redux'
 import { useEffect } from 'react'
-import { checkAuth } from './services/reducers/UserSlice'
+import { checkAuth, setIsAuth, setIsAuthChecked } from './modules/slices/userSlice'
+
 
 function App() {
   const dispatch = useAppDispatch()
   useEffect(() => {
-      dispatch(checkAuth())
-  })
+    const refetchData = async () => {
+      try {
+       await dispatch(checkAuth()).unwrap()
+       dispatch(setIsAuth())
+    } catch (e) {
+      //console.log(e)
+    } finally {
+      dispatch(setIsAuthChecked(true))
+    }
+    }
+    refetchData()
+  }, [])
   return (
     <Routes>
       <Route

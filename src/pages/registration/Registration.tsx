@@ -1,40 +1,33 @@
-import { Button, Flex, Form, Input, Typography, type FormProps } from 'antd'
+import { Button, Flex, Form, Input, Skeleton, Typography, type FormProps } from 'antd'
 import type { UserRegistration } from '../../types/auth-types/authType'
 import {
   LoginLength,
   PasswordLength,
   UsernameLength,
-} from '../../constans/todo'
+} from '../../constans/authReg'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import { registerUser } from '../../services/reducers/UserSlice'
+import { selectRegister } from '../../modules/selectors/userSelectors'
 import { Link, Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { registerUser, setIsReg } from '../../modules/slices/userSlice'
 
-interface repeatPassword {
-  repeatPassword: string
+interface FieldType extends UserRegistration {
+   repeatPassword: string
 }
-
-type FieldType = UserRegistration & repeatPassword
 
 function Registration() {
   const dispatch = useAppDispatch()
-  const { isRegister, regError , isAuth} = useAppSelector((state) => state.userReducer)
+  const { isRegister, isAuth } = useAppSelector((state) => state.userReducer)
+  const {error} = useSelector(selectRegister)
   const [form] = Form.useForm()
   const { Text } = Typography
 
+ 
   if (isAuth) {
     return <Navigate to='/' />
   }
 
   const handleSubmit: FormProps<FieldType>['onFinish'] = async (value) => {
-    if (value.password !== value.repeatPassword) {
-      form.setFields([
-        {
-          name: 'repeatPassword',
-          errors: ['Passwords do not match!'],
-        },
-      ])
-      return
-    }
     const userData: UserRegistration = {
       email: value.email,
       login: value.login,
@@ -42,7 +35,12 @@ function Registration() {
       phoneNumber: value.phoneNumber || '',
       username: value.username,
     }
-    dispatch(registerUser(userData))
+    try {
+      await dispatch(registerUser(userData)).unwrap()
+      dispatch(setIsReg())
+    } catch (e) {
+      //console.log(e)
+    }
   }
 
   return (
@@ -54,9 +52,9 @@ function Registration() {
       requiredMark={false}
       form={form}
     >
-      {regError && (
+      {error && (
         <Flex justify='center'>
-          <Text type='danger'>{regError}</Text>
+          <Text type='danger'>{error as string}</Text>
         </Flex>
       )}
       {isRegister && (
@@ -82,7 +80,7 @@ function Registration() {
         ]}
         style={{ flex: 1 }}
       >
-        <Input type='text' id='inputU' placeholder='username'></Input>
+        <Input type='text' placeholder='username'></Input>
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -102,7 +100,7 @@ function Registration() {
         ]}
         style={{ flex: 1 }}
       >
-        <Input type='text' id='inputL' placeholder='Login'></Input>
+        <Input type='text' placeholder='Login'></Input>
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -123,9 +121,7 @@ function Registration() {
       >
         <Input.Password
           type='text'
-          id='inputP'
           placeholder='password'
-          onChange={() => form.validateFields(['repeatPassword'])}
         ></Input.Password>
       </Form.Item>
 
@@ -142,14 +138,20 @@ function Registration() {
             max: PasswordLength.maxLength,
             message: `Please max ${PasswordLength.maxLength}!`,
           },
+          ({getFieldValue}) => ({
+            validator(_, value){
+              if (!value || getFieldValue('password') === value){
+                return Promise.resolve()
+              }
+              return Promise.reject('Password does not match!')
+            }
+          })
         ]}
         style={{ flex: 1 }}
       >
         <Input.Password
           type='text'
-          id='inputR'
           placeholder='repeatPassword'
-          onChange={() => form.validateFields(['password'])}
         ></Input.Password>
       </Form.Item>
 
@@ -162,7 +164,7 @@ function Registration() {
         ]}
         style={{ flex: 1 }}
       >
-        <Input type='text' id='inputE' placeholder='email'></Input>
+        <Input type='text' placeholder='email'></Input>
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -176,7 +178,7 @@ function Registration() {
         ]}
         style={{ flex: 1 }}
       >
-        <Input type='text' id='inputPh' placeholder='phoneNumber'></Input>
+        <Input type='text' placeholder='phoneNumber'></Input>
       </Form.Item>
       <Flex justify='center'>
         <Form.Item label={null} style={{ marginInlineEnd: '0' }}>

@@ -1,23 +1,35 @@
 import { Button, Flex, Typography } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import { getUser, logout} from '../../services/reducers/UserSlice'
 import { useEffect } from 'react'
+import { getUser, logout, resetIsAuth } from '../../modules/slices/userSlice'
+import { useSelector } from 'react-redux'
+import { selectUser } from '../../modules/selectors/userSelectors'
 
 function ProfilePage() {
   const dispatch = useAppDispatch()
   const { Text } = Typography
-  useEffect(() => {
-    dispatch(getUser())
-  }, [])
-  const handleLogout = () => {
-    {dispatch(logout())}
+  const {isAuth} = useAppSelector(state => state.userReducer)
+
+  useEffect(() => {  
+    if (isAuth) {
+      dispatch(getUser())
+    }      
+  }, [isAuth])
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout()).unwrap()
+      dispatch(resetIsAuth())
+    } catch (e) {
+      console.log(e)
+    }
   }
-  const { user } = useAppSelector((state) => state.userReducer)
+  const {data: user} = useSelector(selectUser)
   return (
     <Flex vertical align='center' gap='large'>
-      <Text>Username: {user.username}</Text>
-      <Text>Email: {user.email}</Text>
-      <Text>Phone number: {user.phoneNumber}</Text>
+      <Text>Username: {user && user.username}</Text>
+      <Text>Email: {user && user.email}</Text>
+      <Text>Phone number: {user && user.phoneNumber}</Text>
       <Button
       onClick={handleLogout}
       type='primary'

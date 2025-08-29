@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './styles/global.scss'
 import { BrowserRouter } from 'react-router-dom'
-import { setupStore } from './services/store.ts'
+import { setupStore } from './modules/store/store.ts'
 import { Provider } from 'react-redux'
 
 export const store = setupStore()
