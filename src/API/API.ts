@@ -15,16 +15,15 @@ export const BASE_URL = 'https://easydev.club/api/v1'
 const accessTokenStorage = () => {
   let accessToken: Token['accessToken'] | null = null
   return {
-    setToken: (token: Token['accessToken']) => accessToken = token,
+    setToken: (token: Token['accessToken']) => (accessToken = token),
     getToken: () => accessToken,
-    clearToken: () => accessToken = null 
+    clearToken: () => (accessToken = null),
   }
 }
 
 export const newAccessToken = accessTokenStorage()
 
 const instance = axios.create({ baseURL: BASE_URL, withCredentials: true })
-
 
 instance.interceptors.request.use((config) => {
   config.headers.Authorization = newAccessToken.getToken()

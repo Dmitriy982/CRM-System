@@ -1,4 +1,12 @@
-import { Button, Flex, Form, Input, Skeleton, Typography, type FormProps } from 'antd'
+import {
+  Button,
+  Flex,
+  Form,
+  Input,
+  Skeleton,
+  Typography,
+  type FormProps,
+} from 'antd'
 import type { AuthData } from '../../types/auth-types/authType'
 import { LoginLength, PasswordLength } from '../../constans/authReg'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
@@ -13,7 +21,7 @@ type FieldType = AuthData
 function Autotenification() {
   const dispatch = useAppDispatch()
   const { isAuth } = useAppSelector((state) => state.userReducer)
-  const {error, status} = useSelector(selectLogin)
+  const { error, status } = useSelector(selectLogin)
   const { Text } = Typography
 
   const handleSubmit: FormProps<FieldType>['onFinish'] = async (value) => {
@@ -25,19 +33,19 @@ function Autotenification() {
       await dispatch(authUser(userData)).unwrap()
       dispatch(setIsAuth())
     } catch (e) {
-        //console.log(e)
-        // После бестпрактис по финтеху, "всю логику делаем в компонентах". У меня
-        // должен был сократится код. Но теперь нужно менять "кастомные" состояния тут, вместо 
-        // fullfilled и тд в extrareducers. Но мне же их нужно обрабатывать в try catch и получается
-        // что я дублирую try catch, т.к. он и в thunk и тут. В чем тогда сокращение кода
-        // или может я неправильно что-то понял или делаю? 
-        // И если мне дублироовать try catch, что мне писать в catch и там и там, 
-        // чтобы не дублировать код?
+      //console.log(e)
+      // После бестпрактис по финтеху, "всю логику делаем в компонентах". У меня
+      // должен был сократится код. Но теперь нужно менять "кастомные" состояния тут, вместо
+      // fullfilled и тд в extrareducers. Но мне же их нужно обрабатывать в try catch и получается
+      // что я дублирую try catch, т.к. он и в thunk и тут. В чем тогда сокращение кода
+      // или может я неправильно что-то понял или делаю?
+      // И если мне дублироовать try catch, что мне писать в catch и там и там,
+      // чтобы не дублировать код?
     }
   }
 
-  if(status.isLoading) {
-    return <Skeleton/>
+  if (status.isLoading) {
+    return <Skeleton />
   }
 
   if (isAuth) {
@@ -92,10 +100,7 @@ function Autotenification() {
         ]}
         style={{ flex: 1 }}
       >
-        <Input.Password
-          type='text'
-          placeholder='username'
-        ></Input.Password>
+        <Input.Password type='text' placeholder='username'></Input.Password>
       </Form.Item>
       <Flex justify='center' flex={1}>
         <Form.Item label={null} style={{ marginInlineEnd: '0' }}>

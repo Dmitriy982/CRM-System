@@ -1,20 +1,36 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit"
-import type { AuthData, Profile, Token, UserRegistration } from "../../types/auth-types/authType"
-import instance, { BASE_URL, newAccessToken } from "../../API/API"
-import {initialState} from '../../core/initialState'
-import axios, { AxiosError } from "axios"
-import { addAsyncBuilderCases, type IErrorData, type IServerError, type TSliceMethod } from "../../core/utils"
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from '@reduxjs/toolkit'
+import type {
+  AuthData,
+  Profile,
+  Token,
+  UserRegistration,
+} from '../../types/auth-types/authType'
+import instance, { BASE_URL, newAccessToken } from '../../API/API'
+import { initialState } from '../../core/initialState'
+import axios, { AxiosError } from 'axios'
+import {
+  addAsyncBuilderCases,
+  type IErrorData,
+  type IServerError,
+} from '../../core/utils'
 
-
-
-export const registerUser =  createAsyncThunk< null, UserRegistration, { rejectValue: IServerError }
+export const registerUser = createAsyncThunk<
+  null,
+  UserRegistration,
+  { rejectValue: IServerError }
 >('auth/registerUser', async (data, { rejectWithValue }) => {
   try {
     await instance.post('/auth/signup', data)
     return null
   } catch (er) {
-    const error = er as AxiosError<IErrorData>;
-    return rejectWithValue(error.response?.data || { message: 'Registration error' });
+    const error = er as AxiosError<IErrorData>
+    return rejectWithValue(
+      error.response?.data || { message: 'Registration error' }
+    )
   }
 })
 
@@ -29,8 +45,8 @@ export const authUser = createAsyncThunk<
     localStorage.setItem('tokenRef', response.data.refreshToken)
     return null
   } catch (er) {
-    const error = er as AxiosError<IErrorData>;
-    return rejectWithValue(error.response?.data || { message: 'Auth error' });
+    const error = er as AxiosError<IErrorData>
+    return rejectWithValue(error.response?.data || { message: 'Auth error' })
   }
 })
 
@@ -50,26 +66,29 @@ export const checkAuth = createAsyncThunk<
     localStorage.setItem('tokenRef', response.data.refreshToken)
     return null
   } catch (er) {
-    const error = er as AxiosError<IErrorData>;
-    return rejectWithValue(error.response?.data || { message: 'CheckAuth error' });
-  } 
-})
-
-export const logout = createAsyncThunk<
-  null,
-  void,
-  { rejectValue: IErrorData }
->('user/logout', async (_, { rejectWithValue }) => {
-  try {
-    await instance.post(`/user/logout`)
-    newAccessToken.clearToken()
-    localStorage.removeItem('tokenRef')
-    return null
-  } catch (er) {
-    const error = er as AxiosError<IErrorData>;
-    return rejectWithValue(error.response?.data || { message: 'Logout error' });
+    const error = er as AxiosError<IErrorData>
+    return rejectWithValue(
+      error.response?.data || { message: 'CheckAuth error' }
+    )
   }
 })
+
+export const logout = createAsyncThunk<null, void, { rejectValue: IErrorData }>(
+  'user/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await instance.post(`/user/logout`)
+      newAccessToken.clearToken()
+      localStorage.removeItem('tokenRef')
+      return null
+    } catch (er) {
+      const error = er as AxiosError<IErrorData>
+      return rejectWithValue(
+        error.response?.data || { message: 'Logout error' }
+      )
+    }
+  }
+)
 
 export const getUser = createAsyncThunk<
   Profile,
@@ -80,8 +99,8 @@ export const getUser = createAsyncThunk<
     const response = await instance.get(`/user/profile`)
     return response.data
   } catch (er) {
-    const error = er as AxiosError<IErrorData>;
-    return rejectWithValue(error.response?.data || { message: 'GetUser error' });
+    const error = er as AxiosError<IErrorData>
+    return rejectWithValue(error.response?.data || { message: 'GetUser error' })
   }
 })
 
@@ -100,16 +119,16 @@ export const userSlice = createSlice({
     },
     setIsAuthChecked: (state, action: PayloadAction<boolean>) => {
       state.isAuthChecked = action.payload
-    }
-
+    },
   },
   extraReducers: (builder) => {
-    addAsyncBuilderCases(builder, getUser, 'user');
-    addAsyncBuilderCases(builder, registerUser, 'register');
-    addAsyncBuilderCases(builder, authUser, 'login');
-    addAsyncBuilderCases(builder, checkAuth, 'checkAuth');}
+    addAsyncBuilderCases(builder, getUser, 'user')
+    addAsyncBuilderCases(builder, registerUser, 'register')
+    addAsyncBuilderCases(builder, authUser, 'login')
+    addAsyncBuilderCases(builder, checkAuth, 'checkAuth')
+  },
 })
 
 export default userSlice.reducer
-export const {setIsAuth, resetIsAuth, setIsAuthChecked, setIsReg } =
+export const { setIsAuth, resetIsAuth, setIsAuthChecked, setIsReg } =
   userSlice.actions

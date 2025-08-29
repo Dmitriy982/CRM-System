@@ -9,28 +9,37 @@ import Autotenification from './pages/authorization/Autotenification'
 import ProtectedRoute from './routes/ProtectedRoute'
 import { useAppDispatch } from './hooks/redux'
 import { useEffect } from 'react'
-import { checkAuth, setIsAuth, setIsAuthChecked } from './modules/slices/userSlice'
-
+import {
+  checkAuth,
+  setIsAuth,
+  setIsAuthChecked,
+} from './modules/slices/userSlice'
 
 function App() {
   const dispatch = useAppDispatch()
   useEffect(() => {
     const refetchData = async () => {
       try {
-       await dispatch(checkAuth()).unwrap()
-       dispatch(setIsAuth())
-    } catch (e) {
-      //console.log(e)
-    } finally {
-      dispatch(setIsAuthChecked(true))
-    }
+        await dispatch(checkAuth()).unwrap()
+        dispatch(setIsAuth())
+      } catch (e) {
+        //console.log(e)
+      } finally {
+        dispatch(setIsAuthChecked(true))
+      }
     }
     refetchData()
   }, [])
   return (
     <Routes>
       <Route
-        path='/' element={  <ProtectedRoute>    <MenuNavigation />  </ProtectedRoute>    }
+        path='/'
+        element={
+          <ProtectedRoute>
+            {' '}
+            <MenuNavigation />{' '}
+          </ProtectedRoute>
+        }
       >
         <Route index element={<TodoListPage />} />
         <Route path='profile' element={<ProfilePage />} />

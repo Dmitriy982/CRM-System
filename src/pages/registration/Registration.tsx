@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Input, Skeleton, Typography, type FormProps } from 'antd'
+import { Button, Flex, Form, Input, Typography, type FormProps } from 'antd'
 import type { UserRegistration } from '../../types/auth-types/authType'
 import {
   LoginLength,
@@ -12,17 +12,16 @@ import { useSelector } from 'react-redux'
 import { registerUser, setIsReg } from '../../modules/slices/userSlice'
 
 interface FieldType extends UserRegistration {
-   repeatPassword: string
+  repeatPassword: string
 }
 
 function Registration() {
   const dispatch = useAppDispatch()
   const { isRegister, isAuth } = useAppSelector((state) => state.userReducer)
-  const {error} = useSelector(selectRegister)
+  const { error } = useSelector(selectRegister)
   const [form] = Form.useForm()
   const { Text } = Typography
 
- 
   if (isAuth) {
     return <Navigate to='/' />
   }
@@ -119,10 +118,7 @@ function Registration() {
         ]}
         style={{ flex: 1 }}
       >
-        <Input.Password
-          type='text'
-          placeholder='password'
-        ></Input.Password>
+        <Input.Password type='text' placeholder='password'></Input.Password>
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -138,14 +134,14 @@ function Registration() {
             max: PasswordLength.maxLength,
             message: `Please max ${PasswordLength.maxLength}!`,
           },
-          ({getFieldValue}) => ({
-            validator(_, value){
-              if (!value || getFieldValue('password') === value){
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
                 return Promise.resolve()
               }
               return Promise.reject('Password does not match!')
-            }
-          })
+            },
+          }),
         ]}
         style={{ flex: 1 }}
       >
