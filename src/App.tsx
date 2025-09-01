@@ -7,37 +7,15 @@ import Registration from './pages/registration/Registration'
 import Authorization from './layout/Authorization'
 import Autotenification from './pages/authorization/Autotenification'
 import ProtectedRoute from './routes/ProtectedRoute'
-import { useAppDispatch } from './hooks/redux'
-import { useEffect } from 'react'
-import {
-  checkAuth,
-  setIsAuth,
-  setIsAuthChecked,
-} from './modules/slices/userSlice'
 
 function App() {
-  const dispatch = useAppDispatch()
-  useEffect(() => {
-    const refetchData = async () => {
-      try {
-        await dispatch(checkAuth()).unwrap()
-        dispatch(setIsAuth())
-      } catch (e) {
-        //console.log(e)
-      } finally {
-        dispatch(setIsAuthChecked(true))
-      }
-    }
-    refetchData()
-  }, [])
   return (
     <Routes>
       <Route
         path='/'
         element={
           <ProtectedRoute>
-            {' '}
-            <MenuNavigation />{' '}
+            <MenuNavigation />
           </ProtectedRoute>
         }
       >

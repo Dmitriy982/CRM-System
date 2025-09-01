@@ -9,39 +9,37 @@ import {
 } from 'antd'
 import type { AuthData } from '../../types/auth-types/authType'
 import { LoginLength, PasswordLength } from '../../constans/authReg'
-import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { useAppDispatch } from '../../hooks/redux'
 import { Navigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { selectLogin } from '../../modules/selectors/userSelectors'
-import { authUser, setIsAuth } from '../../modules/slices/userSlice'
+import {
+  selectLogin,
+  selectUserStore,
+} from '../../services/selectors/userSelectors'
+import { authUser, setIsAuth } from '../../services/slices/userSlice'
+import { useEffect } from 'react'
 
 type FieldType = AuthData
 
 function Autotenification() {
   const dispatch = useAppDispatch()
-  const { isAuth } = useAppSelector((state) => state.userReducer)
+  const { isAuth } = useSelector(selectUserStore)
   const { error, status } = useSelector(selectLogin)
   const { Text } = Typography
+
+  useEffect(() => {
+    if (status.isLoaded) {
+      dispatch(setIsAuth())
+    }
+  }, [status])
 
   const handleSubmit: FormProps<FieldType>['onFinish'] = async (value) => {
     const userData: AuthData = {
       login: value.login,
       password: value.password,
     }
-    try {
-      await dispatch(authUser(userData)).unwrap()
-      dispatch(setIsAuth())
-    } catch (e) {
-      //console.log(e)
-      // После бестпрактис по финтеху, "всю логику делаем в компонентах". У меня
-      // должен был сократится код. Но теперь нужно менять "кастомные" состояния тут, вместо
-      // fullfilled и тд в extrareducers. Но мне же их нужно обрабатывать в try catch и получается
-      // что я дублирую try catch, т.к. он и в thunk и тут. В чем тогда сокращение кода
-      // или может я неправильно что-то понял или делаю?
-      // И если мне дублироовать try catch, что мне писать в catch и там и там,
-      // чтобы не дублировать код?
-    }
+    dispatch(authUser(userData))
   }
 
   if (status.isLoading) {

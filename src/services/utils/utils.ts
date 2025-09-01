@@ -1,19 +1,19 @@
 import type { ActionReducerMapBuilder, AsyncThunk } from '@reduxjs/toolkit'
 import { memoize } from 'lodash'
 
-export interface IAsyncParticle<T = unknown> {
+export interface AsyncParticle<T = unknown> {
   data: T | null
-  error?: IErrorData | null | string
+  error?: ErrorData | null | string
   errorCounter: number
   status: 'idle' | 'pending' | 'fulfilled' | 'rejected'
 }
 
-export interface IErrorData {
+export interface ErrorData {
   message: string
   code?: number
 }
 
-export interface IServerError {
+export interface ServerError {
   message: string
   code?: number
   status?: number
@@ -23,13 +23,13 @@ export type TSliceMethod<RQ, RS> = AsyncThunk<
   RS,
   RQ,
   {
-    rejectValue: IErrorData
+    rejectValue: ErrorData
   }
 >
 
 export const initAsyncParticle = <T extends unknown>(
   data: T | null = null
-): IAsyncParticle<T> => ({
+): AsyncParticle<T> => ({
   data,
   error: null,
   errorCounter: 0,
@@ -38,16 +38,16 @@ export const initAsyncParticle = <T extends unknown>(
 
 export const addAsyncBuilderCases = <TState, RQ, RS>(
   builder: ActionReducerMapBuilder<TState>,
-  sliceMethod: AsyncThunk<RS, RQ, { rejectValue: IErrorData }>,
+  sliceMethod: AsyncThunk<RS, RQ, { rejectValue: ErrorData }>,
   key: keyof TState
 ) => {
   builder.addCase(sliceMethod.pending, (state) => {
-    const draft = state as Record<keyof TState, IAsyncParticle>
+    const draft = state as Record<keyof TState, AsyncParticle>
     draft[key].status = 'pending'
   })
 
   builder.addCase(sliceMethod.fulfilled, (state, action) => {
-    const draft = state as Record<keyof TState, IAsyncParticle>
+    const draft = state as Record<keyof TState, AsyncParticle>
     draft[key].status = 'fulfilled'
     draft[key].error = null
     draft[key].errorCounter = 0
@@ -55,7 +55,7 @@ export const addAsyncBuilderCases = <TState, RQ, RS>(
   })
 
   builder.addCase(sliceMethod.rejected, (state, action) => {
-    const draft = state as Record<keyof TState, IAsyncParticle>
+    const draft = state as Record<keyof TState, AsyncParticle>
     draft[key].data = action.payload
     draft[key].error = action.payload
     draft[key].errorCounter = (draft[key].errorCounter || 0) + 1
@@ -63,7 +63,7 @@ export const addAsyncBuilderCases = <TState, RQ, RS>(
   })
 }
 
-export interface IAsyncDataStatus {
+export interface AsyncDataStatus {
   hasError: boolean
   isIdle: boolean
   isLoading: boolean
@@ -73,7 +73,7 @@ export interface IAsyncDataStatus {
 }
 
 export const getAsyncDataStatus = memoize(
-  (data: IAsyncParticle<unknown>): IAsyncDataStatus => ({
+  (data: AsyncParticle<unknown>): AsyncDataStatus => ({
     hasError: data?.status === 'rejected',
     isIdle: data?.status === 'idle',
     isLoading: data?.status === 'pending',
@@ -85,7 +85,7 @@ export const getAsyncDataStatus = memoize(
 )
 
 export const getAsyncRequestData = memoize(
-  <T>(stateParam: IAsyncParticle<T>) => ({
+  <T>(stateParam: AsyncParticle<T>) => ({
     data: stateParam?.data,
     error: stateParam?.error,
     errorCounter: stateParam?.errorCounter,

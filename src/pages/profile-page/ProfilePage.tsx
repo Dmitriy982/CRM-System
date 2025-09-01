@@ -1,14 +1,20 @@
 import { Button, Flex, Typography } from 'antd'
-import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { useAppDispatch } from '../../hooks/redux'
 import { useEffect } from 'react'
-import { getUser, logout, resetIsAuth } from '../../modules/slices/userSlice'
+import { getUser, logout, resetIsAuth } from '../../services/slices/userSlice'
 import { useSelector } from 'react-redux'
-import { selectUser } from '../../modules/selectors/userSelectors'
+import {
+  selectLogout,
+  selectUser,
+  selectUserStore,
+} from '../../services/selectors/userSelectors'
 
 function ProfilePage() {
   const dispatch = useAppDispatch()
   const { Text } = Typography
-  const { isAuth } = useAppSelector((state) => state.userReducer)
+  const { isAuth } = useSelector(selectUserStore)
+  const { status } = useSelector(selectLogout)
+  const { data: user } = useSelector(selectUser)
 
   useEffect(() => {
     if (isAuth) {
@@ -16,15 +22,16 @@ function ProfilePage() {
     }
   }, [isAuth])
 
-  const handleLogout = async () => {
-    try {
-      await dispatch(logout()).unwrap()
-      dispatch(resetIsAuth())
-    } catch (e) {
-      console.log(e)
-    }
+  const handleLogout = () => {
+    dispatch(logout())
   }
-  const { data: user } = useSelector(selectUser)
+
+  useEffect(() => {
+    if (status.isLoaded) {
+      dispatch(resetIsAuth())
+    }
+  }, [status])
+
   return (
     <Flex vertical align='center' gap='large'>
       <Text>Username: {user && user.username}</Text>

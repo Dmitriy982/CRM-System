@@ -5,11 +5,15 @@ import {
   PasswordLength,
   UsernameLength,
 } from '../../constans/authReg'
-import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import { selectRegister } from '../../modules/selectors/userSelectors'
+import { useAppDispatch } from '../../hooks/redux'
+import {
+  selectRegister,
+  selectUserStore,
+} from '../../services/selectors/userSelectors'
 import { Link, Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { registerUser, setIsReg } from '../../modules/slices/userSlice'
+import { registerUser, setIsReg } from '../../services/slices/userSlice'
+import { useEffect } from 'react'
 
 interface FieldType extends UserRegistration {
   repeatPassword: string
@@ -17,16 +21,18 @@ interface FieldType extends UserRegistration {
 
 function Registration() {
   const dispatch = useAppDispatch()
-  const { isRegister, isAuth } = useAppSelector((state) => state.userReducer)
-  const { error } = useSelector(selectRegister)
+  const { isAuth, isRegister } = useSelector(selectUserStore)
+  const { error, status } = useSelector(selectRegister)
   const [form] = Form.useForm()
   const { Text } = Typography
 
-  if (isAuth) {
-    return <Navigate to='/' />
-  }
+  useEffect(() => {
+    if (status.isLoaded) {
+      dispatch(setIsReg())
+    }
+  }, [status])
 
-  const handleSubmit: FormProps<FieldType>['onFinish'] = async (value) => {
+  const handleSubmit: FormProps<FieldType>['onFinish'] = (value) => {
     const userData: UserRegistration = {
       email: value.email,
       login: value.login,
@@ -34,12 +40,12 @@ function Registration() {
       phoneNumber: value.phoneNumber || '',
       username: value.username,
     }
-    try {
-      await dispatch(registerUser(userData)).unwrap()
-      dispatch(setIsReg())
-    } catch (e) {
-      //console.log(e)
-    }
+
+    dispatch(registerUser(userData))
+  }
+
+  if (isAuth) {
+    return <Navigate to='/' />
   }
 
   return (

@@ -1,12 +1,12 @@
-import type { Profile } from '../types/auth-types/authType'
-import { initAsyncParticle, type IAsyncParticle } from './utils'
+import type { Profile } from '../../types/auth-types/authType'
+import { initAsyncParticle, type AsyncParticle } from '../utils/utils'
 
 export interface UserState {
-  user: IAsyncParticle<Profile | null>
-  register: IAsyncParticle<Profile | null>
-  login: IAsyncParticle<null>
-  checkAuth: IAsyncParticle<null>
-  logout: IAsyncParticle<null>
+  user: AsyncParticle<Profile | null>
+  register: AsyncParticle<Profile | null>
+  login: AsyncParticle<null>
+  checkAuth: AsyncParticle<null>
+  logout: AsyncParticle<null>
   isRegister: boolean
   isAuth: boolean
   isAuthChecked: boolean

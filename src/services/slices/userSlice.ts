@@ -9,25 +9,28 @@ import type {
   Token,
   UserRegistration,
 } from '../../types/auth-types/authType'
-import instance, { BASE_URL, newAccessToken } from '../../API/API'
-import { initialState } from '../../core/initialState'
+import { initialState } from '../initial-states/initialState'
 import axios, { AxiosError } from 'axios'
 import {
   addAsyncBuilderCases,
-  type IErrorData,
-  type IServerError,
-} from '../../core/utils'
+  type ErrorData,
+  type ServerError,
+} from '../utils/utils'
+import { BASE_URL, instance } from '../../API/instance/instance'
+import {
+  accessTokenStorage,
+  newToken,
+} from '../../API/token-storage/tokenStorage'
 
 export const registerUser = createAsyncThunk<
-  null,
+  void,
   UserRegistration,
-  { rejectValue: IServerError }
+  { rejectValue: ServerError }
 >('auth/registerUser', async (data, { rejectWithValue }) => {
   try {
     await instance.post('/auth/signup', data)
-    return null
   } catch (er) {
-    const error = er as AxiosError<IErrorData>
+    const error = er as AxiosError<ErrorData>
     return rejectWithValue(
       error.response?.data || { message: 'Registration error' }
     )
@@ -35,54 +38,51 @@ export const registerUser = createAsyncThunk<
 })
 
 export const authUser = createAsyncThunk<
-  null,
+  void,
   AuthData,
-  { rejectValue: IErrorData }
+  { rejectValue: ErrorData }
 >('auth/authUser', async (data, { rejectWithValue }) => {
   try {
     const response = await instance.post('/auth/signin', data)
-    newAccessToken.setToken(response.data.accessToken)
-    localStorage.setItem('tokenRef', response.data.refreshToken)
-    return null
+    newToken.setAccessToken(response.data.accessToken)
+    accessTokenStorage.setRefreshToken(response.data.refreshToken)
   } catch (er) {
-    const error = er as AxiosError<IErrorData>
+    const error = er as AxiosError<ErrorData>
     return rejectWithValue(error.response?.data || { message: 'Auth error' })
   }
 })
 
 export const checkAuth = createAsyncThunk<
-  null,
   void,
-  { rejectValue: IErrorData }
+  void,
+  { rejectValue: ErrorData }
 >('auth/checkAuth', async (_, { rejectWithValue }) => {
   try {
-    const token = localStorage.getItem('tokenRef')
+    const token = accessTokenStorage.getRefreshToken()
     const response = await axios.post<Token>(
       `${BASE_URL}/auth/refresh`,
       { refreshToken: token },
       { withCredentials: true }
     )
-    newAccessToken.setToken(response.data.accessToken)
-    localStorage.setItem('tokenRef', response.data.refreshToken)
-    return null
+    newToken.setAccessToken(response.data.accessToken)
+    accessTokenStorage.setRefreshToken(response.data.refreshToken)
   } catch (er) {
-    const error = er as AxiosError<IErrorData>
+    const error = er as AxiosError<ErrorData>
     return rejectWithValue(
       error.response?.data || { message: 'CheckAuth error' }
     )
   }
 })
 
-export const logout = createAsyncThunk<null, void, { rejectValue: IErrorData }>(
+export const logout = createAsyncThunk<void, void, { rejectValue: ErrorData }>(
   'user/logout',
   async (_, { rejectWithValue }) => {
     try {
       await instance.post(`/user/logout`)
-      newAccessToken.clearToken()
-      localStorage.removeItem('tokenRef')
-      return null
+      newToken.clearAccessToken()
+      accessTokenStorage.clearRefreshToken()
     } catch (er) {
-      const error = er as AxiosError<IErrorData>
+      const error = er as AxiosError<ErrorData>
       return rejectWithValue(
         error.response?.data || { message: 'Logout error' }
       )
@@ -93,13 +93,13 @@ export const logout = createAsyncThunk<null, void, { rejectValue: IErrorData }>(
 export const getUser = createAsyncThunk<
   Profile,
   void,
-  { rejectValue: IErrorData }
+  { rejectValue: ErrorData }
 >('user/getUser', async (_, { rejectWithValue }) => {
   try {
     const response = await instance.get(`/user/profile`)
     return response.data
   } catch (er) {
-    const error = er as AxiosError<IErrorData>
+    const error = er as AxiosError<ErrorData>
     return rejectWithValue(error.response?.data || { message: 'GetUser error' })
   }
 })
@@ -126,6 +126,7 @@ export const userSlice = createSlice({
     addAsyncBuilderCases(builder, registerUser, 'register')
     addAsyncBuilderCases(builder, authUser, 'login')
     addAsyncBuilderCases(builder, checkAuth, 'checkAuth')
+    addAsyncBuilderCases(builder, logout, 'logout')
   },
 })
 
