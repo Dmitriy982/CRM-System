@@ -28,7 +28,7 @@ export class accessTokenStorage {
   static getRefreshToken(): string | null {
     return localStorage.getItem('tokenRef')
   }
-  static clearRefreshToken() {
+  static clearRefreshToken(): void {
     localStorage.removeItem('tokenRef')
   }
 }
