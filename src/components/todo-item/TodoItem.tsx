@@ -1,9 +1,14 @@
 import { useState, type ReactElement } from 'react'
-import type { Todo } from '../../types/types'
+import type { Todo } from '../../types/todos-types/todosTypes'
 import { Button, Checkbox, Flex, Form, Input, type FormProps } from 'antd'
 import { deleteTodos, editTodos } from '../../API/API'
-import { CheckSquareOutlined, CloseOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
-
+import {
+  CheckSquareOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from '@ant-design/icons'
+import { TodoLength } from '../../constans/todo'
 
 interface TodoItemProps extends Omit<Todo, 'created'> {
   getTodos: () => Promise<void>
@@ -83,7 +88,7 @@ function TodoItem({
 
   const handleCancelButton = () => {
     handleEndEdit()
-    form.setFieldsValue({todo: title})
+    form.setFieldsValue({ todo: title })
   }
 
   return (
@@ -110,38 +115,40 @@ function TodoItem({
             rules={[
               { required: true, message: 'Please input your todo!' },
               {
-                min: 2,
-                message: 'Please min 2 symbols!',
+                min: TodoLength.minLength,
+                message: `Please min ${TodoLength.minLength} symbols!`,
               },
-              { max: 64, message: 'Please max 64 symbols!' }
+              {
+                max: TodoLength.maxLength,
+                message: `Please max ${TodoLength.maxLength} symbols!`,
+              },
             ]}
             style={{ marginBottom: 0 }}
           >
-            <Input
-              disabled={isEdit}
-            />
+            <Input disabled={isEdit} />
           </Form.Item>
           {isEdit ? (
-            <Button 
-            type='primary' 
-            htmlType='button' 
-            onClick={handleStartEdit}
-            size='large'
-            icon={<EditOutlined />}/>
+            <Button
+              type='primary'
+              htmlType='button'
+              onClick={handleStartEdit}
+              size='large'
+              icon={<EditOutlined />}
+            />
           ) : (
             <Flex gap='small'>
-              <Button 
-              type='primary' 
-              htmlType='submit'
-              size='large'
-              icon={<CheckSquareOutlined />}/>
+              <Button
+                type='primary'
+                htmlType='submit'
+                size='large'
+                icon={<CheckSquareOutlined />}
+              />
               <Button
                 type='default'
                 htmlType='button'
                 onClick={handleCancelButton}
                 size='large'
                 icon={<CloseOutlined />}
-                
               />
             </Flex>
           )}
@@ -158,6 +165,5 @@ function TodoItem({
     </Flex>
   )
 }
-
 
 export default TodoItem

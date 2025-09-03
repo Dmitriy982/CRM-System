@@ -1,8 +1,7 @@
 import { memo, useState } from 'react'
 import { Button, Flex, Form, Input, type FormProps } from 'antd'
 import { addTodo } from '../../API/API'
-import { addTodoLength } from '../../constans/todo'
-
+import { TodoLength } from '../../constans/todo'
 
 interface AddTodoProps {
   getTodos: () => Promise<void>
@@ -12,10 +11,10 @@ type FieldType = {
   addTodo: string
 }
 
-const AddTodo = memo(function AddTodo ({ getTodos }: AddTodoProps) {
+const AddTodo = memo(function AddTodo({ getTodos }: AddTodoProps) {
   const [customError, setCustomError] = useState<string>('')
   const [form] = Form.useForm()
-  
+
   const handleSubmit: FormProps<FieldType>['onFinish'] = async (value) => {
     try {
       const todo = await addTodo(value.addTodo)
@@ -42,11 +41,13 @@ const AddTodo = memo(function AddTodo ({ getTodos }: AddTodoProps) {
           rules={[
             { required: true, message: 'Please input your username!' },
             {
-              min: addTodoLength.minLength,
-              message: `Please min ${addTodoLength.minLength}!`,
+              min: TodoLength.minLength,
+              message: `Please min ${TodoLength.minLength}!`,
             },
-            { max: addTodoLength.maxLength, 
-              message: `Please max ${addTodoLength.maxLength}!` },
+            {
+              max: TodoLength.maxLength,
+              message: `Please max ${TodoLength.maxLength}!`,
+            },
           ]}
           style={{ flex: 1 }}
         >

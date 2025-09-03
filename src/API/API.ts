@@ -1,13 +1,11 @@
-import axios from 'axios'
 import type {
   CategorySelector,
   MetaResponse,
   Todo,
   TodoInfo,
   TodoRequest,
-} from '../types/types'
-
-const instance = axios.create({ baseURL: 'https://easydev.club/api/v1' })
+} from '../types/todos-types/todosTypes'
+import { instance } from './instance/instance'
 
 export const addTodo = async (title: string): Promise<Todo | undefined> => {
   const response = await instance.post('/todos', { title, isDone: false })
