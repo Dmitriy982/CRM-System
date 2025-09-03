@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
-import type { CategorySelector, Todo, TodoInfo } from '../../types/types'
+import type {
+  CategorySelector,
+  Todo,
+  TodoInfo,
+} from '../../types/todos-types/todosTypes'
 import TodoTabsFilter from '../../components/todo-tabs-filter/TodoTabsFilter'
 import AddTodo from '../../components/add-todo/AddTodo'
 import TodoList from '../../components/todo-list/TodoList'

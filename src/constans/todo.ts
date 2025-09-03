@@ -1,4 +1,4 @@
-export const addTodoLength = {
-    minLength: 2,
-    maxLength: 64,
-  }
+export const TodoLength = {
+  minLength: 2,
+  maxLength: 64,
+}
